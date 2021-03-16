@@ -9,11 +9,12 @@
         android:id="@+id/btnClicker1"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="Click First"
         app:layout_constraintBottom_toBottomOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <Button
         android:id="@+id/btnClicker2"
@@ -29,6 +30,7 @@
         android:id="@+id/btnClickerSum"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:text="Sum"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
