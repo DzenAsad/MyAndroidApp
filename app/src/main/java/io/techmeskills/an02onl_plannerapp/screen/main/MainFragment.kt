@@ -49,6 +49,8 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         viewBinding.btnClickerSum.setOnClickListener {
             countSum = count1 + count2
         }
+
+        viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(viewModel.notes)
     }
 
 
