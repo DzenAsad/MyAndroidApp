@@ -3,13 +3,11 @@ import kotlin.random.Random
 
 fun main() {
     val listBrands = listOf("Samsung", "Toshiba", "Lenovo")
-    fun randomPrice(): Int {
-        return Random.nextInt(100)
-    }
+    val r: () -> Int = { Random.nextInt(100) }
 
 
     listBrands.forEach {
-        val robotFabric = RobotFabric(it, randomPrice())
+        val robotFabric = RobotFabric(it, r())
         val robot = robotFabric.getObj()
         robot.head.speak()
         robot.hand.upHand()
