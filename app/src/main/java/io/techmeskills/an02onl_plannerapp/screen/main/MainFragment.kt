@@ -2,6 +2,8 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
@@ -23,6 +25,21 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(viewModel.notes)
+        // finding the button
+        val showButton = view.findViewById<Button>(R.id.button)
+
+        // finding the edit text
+        val editText = view.findViewById<EditText>(R.id.nextNoteText)
+
+        // Setting On Click Listener
+        showButton.setOnClickListener {
+
+            // Getting the user input
+            val text = editText.text
+
+            // Showing the user input
+            viewModel.notes.add(Note(text.toString()))
+        }
     }
 
 
