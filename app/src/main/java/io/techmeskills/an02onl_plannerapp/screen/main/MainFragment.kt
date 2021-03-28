@@ -25,6 +25,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(viewModel.notes)
+
         // finding the button
         val showButton = view.findViewById<Button>(R.id.button)
 
