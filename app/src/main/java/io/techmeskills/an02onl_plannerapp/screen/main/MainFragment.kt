@@ -34,12 +34,12 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         // Setting On Click Listener
         showButton.setOnClickListener {
-
             // Getting the user input
             val text = editText.text
 
             // Showing the user input
             viewModel.notes.add(Note(text.toString()))
+            editText.setText("");
         }
     }
 
