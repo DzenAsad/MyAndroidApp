@@ -24,7 +24,9 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(viewModel.notes)
+        viewModel.listLiveData.observe(this.viewLifecycleOwner, {
+            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
+        })
 
         // finding the button
         val showButton = view.findViewById<Button>(R.id.button)
@@ -34,12 +36,14 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         // Setting On Click Listener
         showButton.setOnClickListener {
-
             // Getting the user input
             val text = editText.text
 
-            // Showing the user input
-            viewModel.notes.add(Note(text.toString()))
+            // Add user input like list
+            viewModel.addNoteToList(text.toString())
+
+            //Clear editText
+            editText.setText("")
         }
     }
 

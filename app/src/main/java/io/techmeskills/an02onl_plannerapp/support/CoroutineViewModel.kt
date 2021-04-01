@@ -8,7 +8,7 @@ import kotlinx.coroutines.Job
 import kotlin.coroutines.CoroutineContext
 
 abstract class CoroutineViewModel(
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+        private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel(), CoroutineScope {
 
     private val viewModelJob = Job()
