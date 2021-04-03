@@ -3,7 +3,6 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
@@ -18,7 +17,8 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
-
+        viewBinding.toolbar.setPadding(0, top, 0, 0)
+        viewBinding.recyclerView.setPadding(0, 0, 0, bottom)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,24 +28,13 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
         })
 
-        // finding the button
+
         val showButton = view.findViewById<Button>(R.id.button)
 
-        // finding the edit text
-        val editText = view.findViewById<EditText>(R.id.nextNoteText)
-
-        // Setting On Click Listener
         showButton.setOnClickListener {
-            // Getting the user input
-            val text = editText.text
-
-            // Add user input like list
-            viewModel.addNoteToList(text.toString())
-
-            //Clear editText
-            editText.setText("")
+            layoutInflater.inflate(R.layout.fragment_main2, viewBinding.root)
         }
     }
-
-
 }
+
+
