@@ -21,6 +21,14 @@
         android:id="@+id/mainFragment"
         android:name="io.techmeskills.an02onl_plannerapp.screen.main.MainFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_addFragment"
+            app:destination="@id/addFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="io.techmeskills.an02onl_plannerapp.screen.add.AddFragment"
+        android:label="AddFragment" />
 
 </navigation>

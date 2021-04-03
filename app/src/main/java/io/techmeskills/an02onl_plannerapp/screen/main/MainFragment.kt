@@ -3,6 +3,8 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
@@ -12,7 +14,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_main) {
 
     override val viewBinding: FragmentMainBinding by viewBinding()
-
     private val viewModel: MainViewModel by viewModel()
 
 
@@ -32,8 +33,10 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         val showButton = view.findViewById<Button>(R.id.button)
 
         showButton.setOnClickListener {
-            layoutInflater.inflate(R.layout.fragment_main2, viewBinding.root)
+            it.findNavController().navigate(R.id.action_mainFragment_to_addFragment)
         }
+
+
     }
 }
 
