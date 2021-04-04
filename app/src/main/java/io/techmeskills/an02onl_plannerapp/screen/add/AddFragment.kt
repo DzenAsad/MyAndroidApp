@@ -2,7 +2,9 @@ package io.techmeskills.an02onl_plannerapp.screen.add
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
@@ -21,6 +23,19 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewBinding.buttonAdd.setOnClickListener {
+            if (viewBinding.noteText.text.isNotBlank()) {
+                setFragmentResult(ADD_NEW_RESULT, Bundle().apply {
+                    putString(TEXT, viewBinding.noteText.text.toString())
+                    putString(DATE, viewBinding.noteData.text.toString())
+                })
+                findNavController().popBackStack()
+            } else {
+                Toast.makeText(requireContext(), " Please, enter your note", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
     }
 
     override val backPressedCallback: OnBackPressedCallback
@@ -30,4 +45,10 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
             }
         }
 
+
+    companion object {
+        const val ADD_NEW_RESULT = "ADD_NEW_RESULT"
+        const val TEXT = "TEXT"
+        const val DATE = "DATE"
+    }
 }
