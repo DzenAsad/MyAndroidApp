@@ -16,19 +16,16 @@
         app:title="Planner App"
         app:titleTextColor="@color/white" />
 
-    <EditText
-        android:id="@+id/noteData"
-        android:layout_width="300dp"
+    <DatePicker
+        android:id="@+id/noteDate"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:gravity="center_horizontal"
-        android:hint="Write Data"
-        android:inputType="text"
+        app:layout_constraintVertical_bias="0.1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
     <EditText
@@ -42,7 +39,7 @@
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteData" />
+        app:layout_constraintTop_toBottomOf="@+id/noteDate" />
 
     <Button
         android:id="@+id/buttonAdd"
@@ -52,5 +49,5 @@
         android:text="Add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteData" />
+        app:layout_constraintTop_toBottomOf="@+id/noteDate" />
 </androidx.constraintlayout.widget.ConstraintLayout>

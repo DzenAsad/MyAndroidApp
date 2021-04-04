@@ -28,7 +28,8 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
             if (viewBinding.noteText.text.isNotBlank()) {
                 setFragmentResult(ADD_NEW_RESULT, Bundle().apply {
                     putString(TEXT, viewBinding.noteText.text.toString())
-                    putString(DATE, viewBinding.noteData.text.toString())
+                    val d = viewBinding.noteDate
+                    putString(DATE, "${d.dayOfMonth}.${d.month}.${d.year}")
                 })
                 findNavController().popBackStack()
             } else {
@@ -51,4 +52,6 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
         const val TEXT = "TEXT"
         const val DATE = "DATE"
     }
+
+
 }

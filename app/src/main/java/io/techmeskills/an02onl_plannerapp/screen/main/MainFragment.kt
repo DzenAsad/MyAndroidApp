@@ -38,7 +38,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             val note = bundle.getString(AddFragment.TEXT)
             val date = bundle.getString(AddFragment.DATE)
             note?.let {
-                viewModel.addNoteToList(it)
+                viewModel.addNoteToList(it, date)
             }
         }
 

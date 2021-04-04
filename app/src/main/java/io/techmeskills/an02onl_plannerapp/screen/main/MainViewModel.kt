@@ -25,9 +25,9 @@ class MainViewModel : CoroutineViewModel() {
     val listLiveData = MutableLiveData(notes)
 
 
-    fun addNoteToList(string: String) {
+    fun addNoteToList(string: String, date: String?) {
         launch {
-            val note = Note(string)
+            val note = Note(string, date)
             listLiveData.value?.add(0, note)
         }
     }
