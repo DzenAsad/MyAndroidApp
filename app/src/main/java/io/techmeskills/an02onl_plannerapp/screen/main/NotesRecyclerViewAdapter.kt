@@ -10,7 +10,6 @@ import io.techmeskills.an02onl_plannerapp.R
 class NotesRecyclerViewAdapter(
     private val items: MutableList<Note>,
     private val listener: (Note) -> Unit,
-    private val longListener: (Note, Int) -> Boolean
 ) :
         RecyclerView.Adapter<NoteViewHolder>() {
 
@@ -24,16 +23,18 @@ class NotesRecyclerViewAdapter(
         val item = items[position]
         holder.bind(item)
         holder.itemView.setOnClickListener { listener(item) }
-        holder.itemView.setOnLongClickListener { longListener(item, position)  }
+        holder.itemView.setOnLongClickListener { removeAt(position)
+            false  }
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    fun removeAt(position: Int) {
+    private fun removeAt(position: Int) {
         items.removeAt(position)
         notifyItemRemoved(position)
+        notifyDataSetChanged()
     }
 }
 

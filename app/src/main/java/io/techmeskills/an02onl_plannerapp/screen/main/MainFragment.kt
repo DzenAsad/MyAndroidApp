@@ -28,18 +28,13 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.listLiveData.observe(this.viewLifecycleOwner, {
-            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it, {
+            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it) {
                 val argsBundle =
                     MainFragmentDirections.actionMainFragmentToAddFragment(it.title, it.date)
                 this.findNavController()
                     .navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
                 tmpNote = it
-            }, { Note, Int ->
-                val adapter = viewBinding.recyclerView.adapter as NotesRecyclerViewAdapter
-                adapter.removeAt(Int)
-                true
-
-            })
+            }
         })
 
 

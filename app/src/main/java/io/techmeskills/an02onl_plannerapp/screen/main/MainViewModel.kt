@@ -27,8 +27,7 @@ class MainViewModel : CoroutineViewModel() {
     fun addNoteToList(string: String, date: String?, note: Note?) {
         launch {
             if (note == null) {
-                val note = Note(string, date)
-                listLiveData.value?.add(0, note)
+                listLiveData.value?.add(0, Note(string, date))
             } else {
                 note.date = date
                 note.title = string
