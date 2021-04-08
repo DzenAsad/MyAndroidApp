@@ -2,13 +2,9 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.children
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
@@ -32,18 +28,27 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.listLiveData.observe(this.viewLifecycleOwner, {
-            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it) {
-                val argsBundle = MainFragmentDirections.actionMainFragmentToAddFragment(it.title, it.date)
-                this.findNavController().navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
+            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it, {
+                val argsBundle =
+                    MainFragmentDirections.actionMainFragmentToAddFragment(it.title, it.date)
+                this.findNavController()
+                    .navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
                 tmpNote = it
-            }
+            }, { Note, Int ->
+                val adapter = viewBinding.recyclerView.adapter as NotesRecyclerViewAdapter
+                adapter.removeAt(Int)
+                true
+
+            })
         })
 
 
         viewBinding.button.setOnClickListener {
             tmpNote = Note("")
-            val argsBundle = MainFragmentDirections.actionMainFragmentToAddFragment(tmpNote.title, tmpNote.date)
-            it.findNavController().navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
+            val argsBundle =
+                MainFragmentDirections.actionMainFragmentToAddFragment(tmpNote.title, tmpNote.date)
+            it.findNavController()
+                .navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
         }
 
         setFragmentResultListener(AddFragment.ADD_NEW_RESULT) { key, bundle ->

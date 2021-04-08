@@ -7,7 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.techmeskills.an02onl_plannerapp.R
 
-class NotesRecyclerViewAdapter(private val items: List<Note>, private val listener: (Note) -> Unit) :
+class NotesRecyclerViewAdapter(
+    private val items: MutableList<Note>,
+    private val listener: (Note) -> Unit,
+    private val longListener: (Note, Int) -> Boolean
+) :
         RecyclerView.Adapter<NoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -20,10 +24,16 @@ class NotesRecyclerViewAdapter(private val items: List<Note>, private val listen
         val item = items[position]
         holder.bind(item)
         holder.itemView.setOnClickListener { listener(item) }
+        holder.itemView.setOnLongClickListener { longListener(item, position)  }
     }
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun removeAt(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
     }
 }
 
