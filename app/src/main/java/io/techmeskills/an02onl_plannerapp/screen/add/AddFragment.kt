@@ -17,12 +17,13 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
     private val viewModel: AddViewModel by viewBinding()
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
-//        viewBinding.toolbar.setPadding(0, top, 0, 0)
-//        viewBinding.recyclerView.setPadding(0, 0, 0, bottom)
+        viewBinding.toolbar.setPadding(0, top, 0, 0)
+        viewBinding.root.setPadding(0, 0, 0, bottom)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewBinding.noteText.setText(AddFragmentArgs.fromBundle(requireArguments()).text)
 
         viewBinding.buttonAdd.setOnClickListener {
             if (viewBinding.noteText.text.isNotBlank()) {

@@ -29,6 +29,14 @@
     <fragment
         android:id="@+id/addFragment"
         android:name="io.techmeskills.an02onl_plannerapp.screen.add.AddFragment"
-        android:label="AddFragment" />
+        android:label="AddFragment" >
+        <argument
+            android:name="text"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 
 </navigation>

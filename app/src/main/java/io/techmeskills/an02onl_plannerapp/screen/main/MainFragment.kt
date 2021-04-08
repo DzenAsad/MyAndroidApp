@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.core.view.children
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
@@ -19,6 +20,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
     override val viewBinding: FragmentMainBinding by viewBinding()
     private val viewModel: MainViewModel by viewModel()
+    private var tmpNote: Note? = null
 
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
@@ -30,7 +32,11 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.listLiveData.observe(this.viewLifecycleOwner, {
-            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
+            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it) {
+                val argsBundle = MainFragmentDirections.actionMainFragmentToAddFragment(it.title, it.date)
+                this.findNavController().navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
+                tmpNote = it
+            }
         })
 
 
@@ -42,7 +48,8 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             val note = bundle.getString(AddFragment.TEXT)
             val date = bundle.getString(AddFragment.DATE)
             note?.let {
-                viewModel.addNoteToList(it, date)
+                viewModel.addNoteToList(it, date, tmpNote)
+                tmpNote = null
             }
         }
 
