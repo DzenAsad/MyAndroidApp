@@ -30,8 +30,9 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewBinding.noteText.setText(AddFragmentArgs.fromBundle(requireArguments()).text)
-        val tmpDate = AddFragmentArgs.fromBundle(requireArguments()).date
+        val noteDataFromMain = AddFragmentArgs.fromBundle(requireArguments())
+        viewBinding.noteText.setText(noteDataFromMain.text)
+        val tmpDate = noteDataFromMain.date
         if (tmpDate != null) {
             val date = LocalDate.parse(tmpDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
             viewBinding.noteDate.updateDate(date.year, date.monthValue, date.dayOfMonth)

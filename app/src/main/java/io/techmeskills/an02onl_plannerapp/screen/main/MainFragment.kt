@@ -29,17 +29,17 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         viewModel.listLiveData.observe(this.viewLifecycleOwner, {
             viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it) {
+                tmpNote = it
                 val argsBundle =
                     MainFragmentDirections.actionMainFragmentToAddFragment(it.title, it.date)
                 this.findNavController()
                     .navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
-                tmpNote = it
+
             }
         })
 
 
         viewBinding.button.setOnClickListener {
-            tmpNote = Note("")
             val argsBundle =
                 MainFragmentDirections.actionMainFragmentToAddFragment(tmpNote.title, tmpNote.date)
             it.findNavController()
@@ -54,6 +54,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                     viewModel.addNoteToList(it, date)
                 } else {
                     viewModel.replaceNote(it, date, tmpNote)
+                    tmpNote = Note("")
                 }
             }
         }
