@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
@@ -15,6 +16,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
     override val viewBinding: FragmentMainBinding by viewBinding()
     private val viewModel: MainViewModel by viewModel()
+    private var tmpNote: Note = Note("")
 
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
@@ -26,21 +28,37 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.listLiveData.observe(this.viewLifecycleOwner, {
-            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
+            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it) {
+                tmpNote = it
+                val argsBundle =
+                    MainFragmentDirections.actionMainFragmentToAddFragment(it.title, it.date)
+                this.findNavController()
+                    .navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
+
+            }
         })
 
 
         viewBinding.button.setOnClickListener {
-            it.findNavController().navigate(R.id.action_mainFragment_to_addFragment)
+            val argsBundle =
+                MainFragmentDirections.actionMainFragmentToAddFragment(tmpNote.title, tmpNote.date)
+            it.findNavController()
+                .navigate(R.id.action_mainFragment_to_addFragment, argsBundle.arguments)
         }
 
         setFragmentResultListener(AddFragment.ADD_NEW_RESULT) { key, bundle ->
             val note = bundle.getString(AddFragment.TEXT)
             val date = bundle.getString(AddFragment.DATE)
             note?.let {
-                viewModel.addNoteToList(it, date)
+                if (tmpNote.title == "") {
+                    viewModel.addNoteToList(it, date)
+                } else {
+                    viewModel.replaceNote(it, date, tmpNote)
+                    tmpNote = Note("")
+                }
             }
         }
+
 
     }
 }

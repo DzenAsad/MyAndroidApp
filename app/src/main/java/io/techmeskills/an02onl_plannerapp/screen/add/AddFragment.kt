@@ -1,28 +1,42 @@
 package io.techmeskills.an02onl_plannerapp.screen.add
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentAddBinding
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add) {
 
     override val viewBinding: FragmentAddBinding by viewBinding()
     private val viewModel: AddViewModel by viewBinding()
 
+
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
-//        viewBinding.toolbar.setPadding(0, top, 0, 0)
-//        viewBinding.recyclerView.setPadding(0, 0, 0, bottom)
+        viewBinding.toolbar.setPadding(0, top, 0, 0)
+        viewBinding.root.setPadding(0, 0, 0, bottom)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val noteDataFromMain = AddFragmentArgs.fromBundle(requireArguments())
+        viewBinding.noteText.setText(noteDataFromMain.text)
+        val tmpDate = noteDataFromMain.date
+        if (tmpDate != null) {
+            val date = LocalDate.parse(tmpDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            viewBinding.noteDate.updateDate(date.year, date.monthValue, date.dayOfMonth)
+        }
 
         viewBinding.buttonAdd.setOnClickListener {
             if (viewBinding.noteText.text.isNotBlank()) {

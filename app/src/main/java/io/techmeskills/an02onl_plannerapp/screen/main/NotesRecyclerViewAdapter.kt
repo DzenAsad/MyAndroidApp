@@ -7,20 +7,36 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.techmeskills.an02onl_plannerapp.R
 
-class NotesRecyclerViewAdapter(private val items: List<Note>) :
-        RecyclerView.Adapter<NoteViewHolder>() {
+class NotesRecyclerViewAdapter(
+    private val items: MutableList<Note>,
+    private val listener: (Note) -> Unit,
+) :
+    RecyclerView.Adapter<NoteViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         return NoteViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        holder.bind(item)
+        holder.itemView.setOnClickListener { listener(item) }
+        holder.itemView.setOnLongClickListener {
+            removeAt(position)
+            false
+        }
     }
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    private fun removeAt(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+        notifyDataSetChanged()
     }
 }
 
@@ -33,4 +49,5 @@ class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         tvTitle.text = item.title
         tvDate.text = item.date
     }
+
 }
