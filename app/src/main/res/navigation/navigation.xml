@@ -31,11 +31,8 @@
         android:name="io.techmeskills.an02onl_plannerapp.screen.add.AddFragment"
         android:label="AddFragment" >
         <argument
-            android:name="text"
-            app:argType="string" />
-        <argument
-            android:name="date"
-            app:argType="string"
+            android:name="note"
+            app:argType="io.techmeskills.an02onl_plannerapp.screen.main.Note"
             app:nullable="true" />
     </fragment>
 
