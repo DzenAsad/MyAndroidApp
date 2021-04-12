@@ -31,6 +31,13 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         },
         onDelete = {
             viewModel.deleteNote(it)
+        },
+        onAdd = {
+            findNavController().navigateSafe(
+                MainFragmentDirections.actionMainFragmentToAddFragment(
+                    null
+                )
+            )
         }
     )
 

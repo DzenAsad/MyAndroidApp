@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
@@ -14,17 +13,20 @@ import io.techmeskills.an02onl_plannerapp.R
 
 class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
-    private val onDelete: (Int) -> Unit
+    private val onDelete: (Int) -> Unit,
+    private val onAdd: (Int) -> Unit
 ) :
     ListAdapter<Note, NotesRecyclerViewAdapter.NoteViewHolder>(NoteAdapterDiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ) = NoteViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false),
-        ::onItemClick
-    )
+    ): NoteViewHolder {
+        return NoteViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false),
+            ::onItemClick
+        )
+    }
 
 
     override fun onBindViewHolder(holder: NotesRecyclerViewAdapter.NoteViewHolder, position: Int) {
@@ -33,7 +35,10 @@ class NotesRecyclerViewAdapter(
 
 
     private fun onItemClick(position: Int) {
-        onClick(getItem(position))
+        val a = currentList.size - 1
+        if (position == a)
+            onAdd(a)
+        else onClick(getItem(position))
     }
 
     val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
