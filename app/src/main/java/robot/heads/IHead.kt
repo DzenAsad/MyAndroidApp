@@ -1,7 +1,7 @@
-package kotlinRobot.heads
+package robot.heads
 
-import Price
-import kotlinRobot.Brand
+import robot.Price
+import robot.Brand
 
 class IHead(override val price: Int, override val brandName: String) : Price, Brand {
     fun speak() {

@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -28,16 +27,22 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
 
         viewBinding.buttonAdd.setOnClickListener {
             if (viewBinding.noteText.text.isNotBlank()) {
-                setFragmentResult(NOTE_RESULT, Bundle().apply {
-                    putParcelable(
-                        NOTE,
+                args.note?.let {
+                    viewModel.updateNote(
                         Note(
-                            if (args.note == null) -1 else args.note!!.id,
-                            viewBinding.noteText.text.toString(),
-                            dateFormatter.format(viewBinding.noteDate.getSelectedDate())
+                            id = it.id,
+                            title = viewBinding.noteText.text.toString(),
+                            date = dateFormatter.format(viewBinding.noteDate.getSelectedDate())
                         )
                     )
-                })
+                } ?: run {
+                    viewModel.addNewNote(
+                        Note(
+                            title = viewBinding.noteText.text.toString(),
+                            date = dateFormatter.format(viewBinding.noteDate.getSelectedDate())
+                        )
+                    )
+                }
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(requireContext(), " Please, enter your note", Toast.LENGTH_LONG)
@@ -89,8 +94,4 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
         viewBinding.root.setPadding(0, 0, 0, bottom)
     }
 
-    companion object {
-        const val NOTE_RESULT = "NOTE_RESULT"
-        const val NOTE = "NOTE"
-    }
 }

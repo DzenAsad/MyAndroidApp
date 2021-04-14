@@ -1,54 +1,27 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
 import androidx.lifecycle.MutableLiveData
+import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 import kotlinx.coroutines.launch
 
-class MainViewModel : CoroutineViewModel() {
+class MainViewModel(private val notesDao: NotesDao) : CoroutineViewModel() {
 
 
-    val notesLiveData = MutableLiveData(
-        listOf(
-            AddNote,
-            Note(0, "Помыть посуду"),
-            Note(1, "Забрать пальто из химчистки", "23.03.2021"),
-            Note(2, "Позвонить Ибрагиму"),
-            Note(3, "Заказать перламутровые пуговицы"),
-            Note(4, "Избить соседа за шум ночью"),
-            Note(5, "Выпить на неделе с Володей", "22.03.2021"),
-            Note(6, "Починить кран"),
-            Note(7, "Выбить ковры перед весной"),
-            Note(8, "Заклеить сапог жене"),
-            Note(9, "Купить картошки"),
-            Note(10, "Скачать кино в самолёт", "25.03.2021")
-        )
-    )
+    val notesLiveData = MutableLiveData<List<Note>>(listOf(AddNote))
 
 
-    fun addNote(note: Note) {
+    fun deleteNote(note: Note) {
         launch {
-            val list = notesLiveData.value!!.toMutableList()
-            val maxIndex = (list.map { it.id }.maxOrNull() ?: 0L) + 1L
-            list.add(0, Note(maxIndex, note.title, note.date))
-            notesLiveData.postValue(list)
+            notesDao.deleteNote(note)
         }
+        invalidateList()
     }
 
-    fun editNote(note: Note) {
+    fun invalidateList() {
         launch {
-            val list = notesLiveData.value!!.toMutableList()
-            val pos = list.indexOfFirst { it.id == note.id }
-            list.removeAt(pos)
-            list.add(pos, note)
-            notesLiveData.postValue(list)
-        }
-    }
-
-    fun deleteNote(pos: Int) {
-        launch {
-            val list = notesLiveData.value!!.toMutableList()
-            list.removeAt(pos)
-            notesLiveData.postValue(list)
+            val notes = notesDao.getAllNotes()
+            notesLiveData.postValue(listOf(AddNote) + notes)
         }
     }
 

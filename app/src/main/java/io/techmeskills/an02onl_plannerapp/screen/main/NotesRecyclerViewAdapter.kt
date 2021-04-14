@@ -13,7 +13,7 @@ import io.techmeskills.an02onl_plannerapp.R
 
 class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
-    private val onDelete: (Int) -> Unit,
+    private val onDelete: (Note) -> Unit,
     private val onAdd: () -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteAdapterDiffCallback()) {
 
@@ -67,7 +67,7 @@ class NotesRecyclerViewAdapter(
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
             //Remove swiped item from list and notify the RecyclerView
             val position = viewHolder.adapterPosition
-            onDelete(position)
+            onDelete(getItem(position))
         }
     }
 
@@ -75,8 +75,7 @@ class NotesRecyclerViewAdapter(
     inner class NoteViewHolder(
         itemView: View,
         private val onItemClick: (Int) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(itemView) {
 
         private val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
         private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)

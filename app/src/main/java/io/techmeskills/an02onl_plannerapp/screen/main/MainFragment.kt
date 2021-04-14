@@ -44,25 +44,18 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         viewBinding.recyclerView.adapter = adapter
 
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
             adapter.submitList(it)
         }
 
+        viewModel.invalidateList()
+
         val itemTouchHelper = ItemTouchHelper(adapter.simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
-
-        setFragmentResultListener(AddFragment.NOTE_RESULT) { key, bundle ->
-            bundle.getParcelable<Note>(AddFragment.NOTE)?.let {
-                if (it.id < 0) {
-                    viewModel.addNote(it)
-                } else {
-                    viewModel.editNote(it)
-                }
-            }
-        }
 
     }
 
