@@ -2,17 +2,15 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Adapter
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
-import io.techmeskills.an02onl_plannerapp.screen.add.AddFragment
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import io.techmeskills.an02onl_plannerapp.support.navigateSafe
-import io.techmeskills.an02onl_plannerapp.support.setVerticalMargin
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -22,28 +20,32 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     private val viewModel: MainViewModel by viewModel()
 
     private val adapter = NotesRecyclerViewAdapter(
-        onClick = { note ->
-            findNavController().navigateSafe(
-                MainFragmentDirections.actionMainFragmentToAddFragment(
-                    note
+            onClick = { note ->
+                findNavController().navigateSafe(
+                        MainFragmentDirections.actionMainFragmentToAddFragment(
+                                note
+                        )
                 )
-            )
-        },
-        onDelete = {
-            viewModel.deleteNote(it)
-        },
-        onAdd = {
-            findNavController().navigateSafe(
-                MainFragmentDirections.actionMainFragmentToAddFragment(
-                    null
+            },
+            onDelete = {
+                viewModel.deleteNote(it)
+            },
+            onAdd = {
+                findNavController().navigateSafe(
+                        MainFragmentDirections.actionMainFragmentToAddFragment(
+                                null
+                        )
                 )
-            )
-        }
+            },
+            onUpdateTwoNotes = { noteFrom, noteTo ->
+                viewModel.updateTwoNote(noteFrom, noteTo)
+            }
     )
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         viewBinding.recyclerView.adapter = adapter
 
@@ -51,33 +53,17 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             adapter.submitList(it)
         }
 
+        viewModel.invalidateList()
+
         val itemTouchHelper = ItemTouchHelper(adapter.simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
 
-        setFragmentResultListener(AddFragment.NOTE_RESULT) { key, bundle ->
-            bundle.getParcelable<Note>(AddFragment.NOTE)?.let {
-                if (it.id < 0) {
-                    viewModel.addNote(it)
-                } else {
-                    viewModel.editNote(it)
-                }
-            }
-        }
-
-        viewBinding.button.setOnClickListener {
-            findNavController().navigateSafe(
-                MainFragmentDirections.actionMainFragmentToAddFragment(
-                    null
-                )
-            )
-        }
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
         viewBinding.toolbar.setPadding(0, top, 0, 0)
         viewBinding.recyclerView.setPadding(0, 0, 0, bottom)
-        viewBinding.button.setVerticalMargin(marginBottom = bottom)
     }
 
     override val backPressedCallback: OnBackPressedCallback

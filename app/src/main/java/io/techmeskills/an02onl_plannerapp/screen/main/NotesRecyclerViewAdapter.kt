@@ -13,60 +13,89 @@ import io.techmeskills.an02onl_plannerapp.R
 
 class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
-    private val onDelete: (Int) -> Unit,
-    private val onAdd: (Int) -> Unit
-) :
-    ListAdapter<Note, NotesRecyclerViewAdapter.NoteViewHolder>(NoteAdapterDiffCallback()) {
+    private val onDelete: (Note) -> Unit,
+    private val onAdd: () -> Unit,
+    private val onUpdateTwoNotes: (Note, Note) -> Unit
+) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteAdapterDiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): NoteViewHolder {
-        return NoteViewHolder(
+    ): RecyclerView.ViewHolder = when (viewType){
+        ADD -> AddViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.note_list_item_add, parent, false),
+            onAdd
+        )
+
+        else -> NoteViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false),
             ::onItemClick
         )
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is AddNote -> ADD
+            else -> NOTE
+        }
+    }
 
-    override fun onBindViewHolder(holder: NotesRecyclerViewAdapter.NoteViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is NoteViewHolder -> holder.bind(getItem(position))
+            else -> (holder as AddViewHolder).bind()
+        }
     }
 
 
     private fun onItemClick(position: Int) {
-        val a = currentList.size - 1
-        if (position == a)
-            onAdd(a)
-        else onClick(getItem(position))
+        onClick(getItem(position))
     }
 
     val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
         ItemTouchHelper.SimpleCallback(
-            0,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.DOWN or ItemTouchHelper.UP
         ) {
+
+        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+            if (viewHolder.itemViewType == 1) return 0 //Protect add button from delete
+            return super.getMovementFlags(recyclerView, viewHolder)
+        }
+
+
+
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
-            return false
+            val noteFrom = getItem(viewHolder.adapterPosition)
+            val noteTo = getItem(target.adapterPosition)
+            val noteFromTo = Note(noteTo.id, noteFrom.title, noteFrom.date)
+            val noteToFrom = Note(noteFrom.id, noteTo.title, noteTo.date)
+            onUpdateTwoNotes(noteFromTo, noteToFrom)
+            recyclerView.adapter!!.notifyItemMoved(viewHolder.adapterPosition, target.adapterPosition)
+//            recyclerView.adapter!!.notifyItemRangeChanged(0, max(viewHolder.adapterPosition, target.adapterPosition), Any())
+            return true
+        }
+
+        override fun isLongPressDragEnabled(): Boolean {
+            return true
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-            //Remove swiped item from list and notify the RecyclerView
             val position = viewHolder.adapterPosition
-            onDelete(position)
+            onDelete(getItem(position))
         }
+
     }
 
 
     inner class NoteViewHolder(
         itemView: View,
         private val onItemClick: (Int) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(itemView) {
+    ) : RecyclerView.ViewHolder(itemView) {
 
         private val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
         private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
@@ -81,6 +110,26 @@ class NotesRecyclerViewAdapter(
             tvTitle.text = item.title
             tvDate.text = item.date
         }
+    }
+
+    inner class AddViewHolder(
+        itemView: View,
+        private val onItemClick: () -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
+
+        init {
+            itemView.setOnClickListener {
+                onItemClick()
+            }
+        }
+
+        fun bind() = Unit
+    }
+
+
+    companion object {
+        const val ADD = 1
+        const val NOTE = 2
     }
 }
 

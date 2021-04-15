@@ -1,7 +1,7 @@
-package kotlinRobot.fabric
+package robot.fabric
 
 
-import Robot
+import robot.Robot
 
 
 class RobotFabric(brandName: String, price: Int): Fabric<Robot> {

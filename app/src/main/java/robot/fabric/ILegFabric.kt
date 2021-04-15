@@ -1,6 +1,6 @@
-package kotlinRobot.fabric
+package robot.fabric
 
-import kotlinRobot.legs.ILeg
+import robot.legs.ILeg
 
 class ILegFabric(val price: Int, val brandName: String) : Fabric<ILeg> {
     override fun getObj(): ILeg {

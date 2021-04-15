@@ -1,4 +1,6 @@
-import kotlinRobot.fabric.RobotFabric
+package robot
+
+import robot.fabric.RobotFabric
 import kotlin.random.Random
 
 fun main() {
