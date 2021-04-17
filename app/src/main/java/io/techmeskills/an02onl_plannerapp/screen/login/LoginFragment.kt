@@ -20,20 +20,19 @@ class LoginFragment : NavigationFragment<FragmentLoginBinding>(R.layout.fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val user = viewModel.getUser()?.let {
             findNavController().navigateSafe(
-                LoginFragmentDirections.actionLoginFragmentToMainFragment())
+                LoginFragmentDirections.actionLoginFragmentToMainFragment()
+            )
         }
 
 
         viewBinding.buttonGO.setOnClickListener {
-
-            if (user == null ){
-                val fn = viewBinding.firstName.text.toString()
-                val ln = viewBinding.lastName.text.toString()
-                viewModel.saveUser(User(0, fn,ln))
-
+            val fn = viewBinding.firstName.text.toString()
+            val ln = viewBinding.lastName.text.toString()
+            viewModel.saveUser(User(0, fn, ln)).let {
+                findNavController().navigateSafe(
+                    LoginFragmentDirections.actionLoginFragmentToMainFragment()
+                )
             }
-            findNavController().navigateSafe(
-                LoginFragmentDirections.actionLoginFragmentToMainFragment())
         }
 
     }
