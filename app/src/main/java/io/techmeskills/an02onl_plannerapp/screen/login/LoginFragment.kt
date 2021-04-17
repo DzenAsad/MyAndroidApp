@@ -36,9 +36,6 @@ class LoginFragment : NavigationFragment<FragmentLoginBinding>(R.layout.fragment
                 LoginFragmentDirections.actionLoginFragmentToMainFragment())
         }
 
-        viewBinding.buttonLogout.setOnClickListener {
-            viewModel.clearSavedUser()
-        }
     }
 
     override val backPressedCallback: OnBackPressedCallback

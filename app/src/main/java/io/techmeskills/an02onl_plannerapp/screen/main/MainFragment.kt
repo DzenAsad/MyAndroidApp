@@ -54,7 +54,12 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         }
 
         val toolbar = viewBinding.toolbar
-
+        toolbar.title = viewModel.getSavedUser()?.firstName
+        toolbar.subtitle = viewModel.getSavedUser()?.lastName
+        toolbar.setNavigationOnClickListener {
+            viewModel.clearSavedUser()
+            findNavController().popBackStack()
+        }
 
         val itemTouchHelper = ItemTouchHelper(adapter.simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)

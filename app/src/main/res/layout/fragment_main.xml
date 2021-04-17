@@ -16,6 +16,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="Planner App"
         app:titleTextColor="@color/white"
+        app:subtitle="planner app"
+        app:subtitleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24"
         />
 
 

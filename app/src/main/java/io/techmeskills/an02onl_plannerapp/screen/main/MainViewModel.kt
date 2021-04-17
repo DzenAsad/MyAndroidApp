@@ -34,13 +34,17 @@ class MainViewModel(private val sharPrefUser: SharPrefUser, private val notesDao
         }
     }
 
-    private fun getSavedUser(): User? {
+    fun getSavedUser(): User? {
         if (sharPrefUser.getSavedUser() != null) {
 
 
             return sharPrefUser.getSavedUser()
         }
         return null
+    }
+
+    fun clearSavedUser() {
+        sharPrefUser.clearSavedUser()
     }
 
 }

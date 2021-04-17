@@ -14,10 +14,6 @@ class LoginViewModel(private val sharPrefUser: SharPrefUser, private val notesDa
         return sharPrefUser.getSavedUser()
     }
 
-    fun clearSavedUser() {
-        sharPrefUser.clearSavedUser()
-    }
-
     fun saveUser(user: User) {
         launch {
             val idUser = notesDao.getUserId(user.firstName, user.lastName)
