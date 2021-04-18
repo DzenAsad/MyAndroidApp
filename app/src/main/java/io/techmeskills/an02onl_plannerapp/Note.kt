@@ -10,5 +10,6 @@ open class Note(
         @PrimaryKey(autoGenerate = true) val id: Long = 0L,
         val title: String,
         val date: String? = null,
-        val user: Long
+        val user: Long,
+        var position: Long = 0L
 ) : Parcelable

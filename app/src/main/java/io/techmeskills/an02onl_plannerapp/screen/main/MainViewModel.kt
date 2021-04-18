@@ -10,13 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainViewModel(private val sharPrefUser: SharPrefUser, private val notesDao: NotesDao) :
     CoroutineViewModel() {
 
 
     val notesLiveData =
-        notesDao.getAllUserNotes(getSavedUser()!!.userId).map { listOf(AddNote) + it }
+        notesDao.getAllUserNotes(getSavedUser()!!.userId).map { (listOf(AddNote) + it).sortedBy { it.position } }
             .flowOn(Dispatchers.IO).asLiveData()
 
 
@@ -27,10 +28,10 @@ class MainViewModel(private val sharPrefUser: SharPrefUser, private val notesDao
     }
 
 
-    fun updateTwoNote(note1: Note, note2: Note) {
+    fun updateNotes(notes: List<Note>, fromPos: Int, toPos: Int) {
         launch {
-            notesDao.updateNote(note1)
-            notesDao.updateNote(note2)
+            val tmp = notes.mapIndexed{index, note -> note.apply {if (fromPos == index) note.position = toPos.toLong() }}
+            notesDao.updateNotes(tmp)
         }
     }
 

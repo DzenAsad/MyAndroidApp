@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import by.kirich1409.viewbindingdelegate.viewBinding
+import io.techmeskills.an02onl_plannerapp.Note
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
@@ -37,8 +38,8 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                         )
                 )
             },
-            onUpdateTwoNotes = { noteFrom, noteTo ->
-                viewModel.updateTwoNote(noteFrom, noteTo)
+            onUpdate = { list: List<Note>, i: Int, i2: Int ->
+                viewModel.updateNotes(list, i, i2)
             }
     )
 
