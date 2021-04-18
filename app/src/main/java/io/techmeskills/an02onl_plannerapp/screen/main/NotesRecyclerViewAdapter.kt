@@ -17,7 +17,6 @@ class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
     private val onDelete: (Note) -> Unit,
     private val onAdd: () -> Unit,
-    private val onUpdate: (List<Note>, Int, Int) -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteAdapterDiffCallback()) {
 
     override fun onCreateViewHolder(
@@ -74,7 +73,6 @@ class NotesRecyclerViewAdapter(
         ): Boolean {
             val fromPos = viewHolder.adapterPosition
             val toPos = target.adapterPosition
-            onUpdate(currentList, fromPos, toPos)
             recyclerView.adapter!!.notifyItemMoved(fromPos, toPos)
             return true
         }

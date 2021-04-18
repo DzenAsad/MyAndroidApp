@@ -37,9 +37,6 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                                 null
                         )
                 )
-            },
-            onUpdate = { list: List<Note>, i: Int, i2: Int ->
-                viewModel.updateNotes(list, i, i2)
             }
     )
 

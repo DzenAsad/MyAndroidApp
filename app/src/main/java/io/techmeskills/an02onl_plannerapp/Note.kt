@@ -11,5 +11,4 @@ open class Note(
         val title: String,
         val date: String? = null,
         val user: Long,
-        var position: Long = 0L
 ) : Parcelable

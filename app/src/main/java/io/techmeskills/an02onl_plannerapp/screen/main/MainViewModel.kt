@@ -17,7 +17,7 @@ class MainViewModel(private val sharPrefUser: SharPrefUser, private val notesDao
 
 
     val notesLiveData =
-        notesDao.getAllUserNotes(getSavedUser()!!.userId).map { (listOf(AddNote) + it).sortedBy { it.position } }
+        notesDao.getAllUserNotes(getSavedUser()!!.userId).map {listOf(AddNote) + it}
             .flowOn(Dispatchers.IO).asLiveData()
 
 
@@ -27,13 +27,6 @@ class MainViewModel(private val sharPrefUser: SharPrefUser, private val notesDao
         }
     }
 
-
-    fun updateNotes(notes: List<Note>, fromPos: Int, toPos: Int) {
-        launch {
-            val tmp = notes.mapIndexed{index, note -> note.apply {if (fromPos == index) note.position = toPos.toLong() }}
-            notesDao.updateNotes(tmp)
-        }
-    }
 
     fun getSavedUser(): User? {
         if (sharPrefUser.getSavedUser() != null) {
