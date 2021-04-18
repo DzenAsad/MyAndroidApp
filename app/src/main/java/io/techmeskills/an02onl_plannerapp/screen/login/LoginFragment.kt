@@ -18,7 +18,7 @@ class LoginFragment : NavigationFragment<FragmentLoginBinding>(R.layout.fragment
     private val viewModel: LoginViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val user = viewModel.getUser()?.let {
+        viewModel.getUser()?.let {
             findNavController().navigateSafe(
                 LoginFragmentDirections.actionLoginFragmentToMainFragment()
             )
@@ -29,21 +29,24 @@ class LoginFragment : NavigationFragment<FragmentLoginBinding>(R.layout.fragment
             val fn = viewBinding.firstName.text.toString()
             val ln = viewBinding.lastName.text.toString()
             viewModel.saveUser(User(0, fn, ln)).let {
-                findNavController().navigateSafe(
-                    LoginFragmentDirections.actionLoginFragmentToMainFragment()
-                )
+                if (it == "done") {
+                    findNavController().navigateSafe(
+                        LoginFragmentDirections.actionLoginFragmentToMainFragment()
+                    )
+                }
             }
         }
-
     }
 
-    override val backPressedCallback: OnBackPressedCallback
-        get() = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack()
-            }
+
+
+override val backPressedCallback: OnBackPressedCallback
+    get() = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            findNavController().popBackStack()
         }
-
-    override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
     }
+
+override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
+}
 }

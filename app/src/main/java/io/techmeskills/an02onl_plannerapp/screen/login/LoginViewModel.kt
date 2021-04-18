@@ -6,6 +6,7 @@ import io.techmeskills.an02onl_plannerapp.model.sharedPrefs.SharPrefUser
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 
 class LoginViewModel(private val sharPrefUser: SharPrefUser, private val notesDao: NotesDao) :
@@ -15,8 +16,8 @@ class LoginViewModel(private val sharPrefUser: SharPrefUser, private val notesDa
         return sharPrefUser.getSavedUser()
     }
 
-    fun saveUser(user: User): Deferred<Unit> {
-        val a = async {
+    fun saveUser(user: User): String? {
+        launch {
             val idUser = notesDao.getUserId(user.firstName, user.lastName)
             if (idUser != 0L) {
                 sharPrefUser.setSavedUser(user) { idUser }
@@ -24,6 +25,6 @@ class LoginViewModel(private val sharPrefUser: SharPrefUser, private val notesDa
                 sharPrefUser.setSavedUser(user) { notesDao.saveUser(it) }
             }
         }
-        return a
+        return "done"
     }
 }
