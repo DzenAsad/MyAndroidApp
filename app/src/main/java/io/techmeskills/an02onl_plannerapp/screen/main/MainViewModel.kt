@@ -10,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.util.*
 
 class MainViewModel(private val sharPrefUser: SharPrefUser, private val notesDao: NotesDao) :
     CoroutineViewModel() {

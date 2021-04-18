@@ -4,9 +4,7 @@ import io.techmeskills.an02onl_plannerapp.User
 import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
 import io.techmeskills.an02onl_plannerapp.model.sharedPrefs.SharPrefUser
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
@@ -27,5 +25,9 @@ class LoginViewModel(private val sharPrefUser: SharPrefUser, private val notesDa
             }
         }
         return a
+    }
+
+    fun clearSavedUser() {
+        sharPrefUser.clearSavedUser()
     }
 }
