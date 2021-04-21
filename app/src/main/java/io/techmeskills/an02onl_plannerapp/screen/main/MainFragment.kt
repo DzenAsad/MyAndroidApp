@@ -2,6 +2,7 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -49,11 +50,15 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             adapter.submitList(it)
         }
 
-        val toolbar = viewBinding.toolbar
-        toolbar.title = viewModel.getSavedUser()?.firstName
-        toolbar.subtitle = viewModel.getSavedUser()?.lastName
-        toolbar.setNavigationOnClickListener {
-            viewModel.clearSavedUser()
+        viewModel.currentUser.observe(this.viewLifecycleOwner) {
+            viewBinding.toolbar.title = it.firstName
+            viewBinding.toolbar.subtitle = it.lastName
+        }
+
+
+        viewBinding.toolbar.setNavigationOnClickListener {
+            val z = viewModel.logout()
+            while (!z.isCompleted) {}
             findNavController().popBackStack()
         }
 

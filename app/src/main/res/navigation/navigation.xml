@@ -44,7 +44,7 @@
         tools:layout="@layout/fragment_add">
         <argument
             android:name="note"
-            app:argType="io.techmeskills.an02onl_plannerapp.Note"
+            app:argType="io.techmeskills.an02onl_plannerapp.model.Note"
             app:nullable="true" />
     </fragment>
 

@@ -1,4 +1,4 @@
-package io.techmeskills.an02onl_plannerapp
+package io.techmeskills.an02onl_plannerapp.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

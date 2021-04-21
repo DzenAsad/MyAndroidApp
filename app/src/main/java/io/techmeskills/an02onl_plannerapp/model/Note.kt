@@ -1,4 +1,4 @@
-package io.techmeskills.an02onl_plannerapp
+package io.techmeskills.an02onl_plannerapp.model
 
 import android.os.Parcelable
 import androidx.room.*
@@ -10,5 +10,5 @@ open class Note(
         @PrimaryKey(autoGenerate = true) val id: Long = 0L,
         val title: String,
         val date: String? = null,
-        val user: Long,
+        val user: Long = -1L,
 ) : Parcelable
