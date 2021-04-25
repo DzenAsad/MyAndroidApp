@@ -22,5 +22,8 @@ abstract class UsersDao {
     @Query("SELECT * FROM users")
     abstract fun getAllUsers(): Flow<List<User>>
 
+    @Query("SELECT * FROM users WHERE user_id == :userId")
+    abstract fun getById(userId: Long): Flow<User>
+
 
 }

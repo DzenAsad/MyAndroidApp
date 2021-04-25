@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
@@ -59,6 +60,9 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         }
 
+        viewBinding.syncImage.setOnClickListener {
+            showCloudDialog()
+        }
 
         viewBinding.toolbar.setNavigationOnClickListener {
             viewModel.logout()
@@ -69,6 +73,21 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
 
+    }
+
+    private fun showCloudDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Cloud storage")
+            .setMessage("Chose")
+            .setPositiveButton("Import") { dialog, _ ->
+//                viewBinding.progressIndicator.isVisible = true
+                viewModel.importNotes()
+                dialog.cancel()
+            }.setNegativeButton("Export") { dialog, _ ->
+//                viewBinding.progressIndicator.isVisible = true
+                viewModel.exportNotes()
+                dialog.cancel()
+            }.show()
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {

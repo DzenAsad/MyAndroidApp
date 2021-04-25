@@ -3,7 +3,9 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
@@ -95,6 +97,7 @@ class NotesRecyclerViewAdapter(
 
         private val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
         private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
+        private val ivCloud = itemView.findViewById<ImageView>(R.id.syncImage)
 
         init {
             itemView.setOnClickListener {
@@ -105,6 +108,7 @@ class NotesRecyclerViewAdapter(
         fun bind(item: Note) {
             tvTitle.text = item.title
             tvDate.text = item.date
+            ivCloud.isVisible = item.fromCloud
         }
     }
 

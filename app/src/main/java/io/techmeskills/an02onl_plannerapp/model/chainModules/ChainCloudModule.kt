@@ -1,0 +1,48 @@
+package io.techmeskills.an02onl_plannerapp.model.chainModules
+
+import io.techmeskills.an02onl_plannerapp.model.Note
+import io.techmeskills.an02onl_plannerapp.model.cloud.ApiInterface
+import io.techmeskills.an02onl_plannerapp.model.cloud.CloudNote
+import io.techmeskills.an02onl_plannerapp.model.cloud.CloudUser
+import io.techmeskills.an02onl_plannerapp.model.cloud.ExportNotesRequestBody
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+
+class ChainCloudModule(
+    private val apiInterface: ApiInterface,
+    private val chainNoteModule: ChainNoteModule,
+    private val chainUserModule: ChainUserModule
+) {
+
+    @ExperimentalCoroutinesApi
+    suspend fun exportNotes(): Boolean {
+        val user = chainUserModule.getCurrentUserFlow().first()
+        val notes = chainNoteModule.getCurrentUserNotes()
+        val cloudUser = CloudUser(userId = user.userId, userName = user.firstName + " " + user.lastName)
+        val cloudNotes = notes.map { CloudNote(id = it.id, title = it.title, date = it.date) }
+        val exportRequestBody =
+            ExportNotesRequestBody(cloudUser, chainUserModule.phoneId, cloudNotes)
+        val exportResult = apiInterface.exportNotes(exportRequestBody).isSuccessful
+        if (exportResult) {
+            chainNoteModule.setAllNotesSyncWithCloud()
+        }
+        return exportResult
+    }
+
+    @ExperimentalCoroutinesApi
+    suspend fun importNotes(): Boolean {
+        val user = chainUserModule.getCurrentUserFlow().first()
+        val response = apiInterface.importNotes(userName = user.firstName + " " + user.lastName, chainUserModule.phoneId)
+        val cloudNotes = response.body() ?: emptyList()
+        val notes = cloudNotes.map { cloudNote ->
+            Note(
+                title = cloudNote.title,
+                date = cloudNote.date,
+                user = user.userId,
+                fromCloud = true
+            )
+        }
+        chainNoteModule.saveNotes(notes)
+        return response.isSuccessful
+    }
+}

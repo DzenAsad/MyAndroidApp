@@ -1,15 +1,22 @@
 package io.techmeskills.an02onl_plannerapp.model.chainModules
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.provider.Settings
 import io.techmeskills.an02onl_plannerapp.model.User
 import io.techmeskills.an02onl_plannerapp.model.dao.UsersDao
 import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class ChainUserModule(private val usersDao: UsersDao, private val settingsStore: SettingsStore) {
+class ChainUserModule(context: Context,
+                      private val usersDao: UsersDao,
+                      private val settingsStore: SettingsStore) {
 
     val allUserNames = usersDao.getAllUsers()
 
@@ -43,4 +50,13 @@ class ChainUserModule(private val usersDao: UsersDao, private val settingsStore:
     fun getCurrentUser(): Flow<User>{
         return settingsStore.storedUserFlow()
     }
+
+    @ExperimentalCoroutinesApi
+    fun getCurrentUserFlow(): Flow<User> = settingsStore.storedUserFlow().flatMapLatest {
+        usersDao.getById(it.userId)
+    }
+
+    @SuppressLint("HardwareIds")
+    val phoneId: String =
+        Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 }
