@@ -14,6 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/syncImage"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="4dp"
+            android:scaleType="fitStart"
+            android:alpha="1"
+            android:background="@drawable/ic_baseline_personal_video_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
@@ -34,14 +46,17 @@
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_margin="17dp"
             android:fontFamily="sans-serif"
-            android:textSize="30sp"
-            android:textStyle="normal"
+            android:textSize="28sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="23.03.2021" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

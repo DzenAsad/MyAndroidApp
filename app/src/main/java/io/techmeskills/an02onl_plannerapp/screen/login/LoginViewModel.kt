@@ -1,33 +1,40 @@
 package io.techmeskills.an02onl_plannerapp.screen.login
 
-import io.techmeskills.an02onl_plannerapp.User
-import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
-import io.techmeskills.an02onl_plannerapp.model.sharedPrefs.SharPrefUser
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import io.techmeskills.an02onl_plannerapp.model.User
+import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
+import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(private val sharPrefUser: SharPrefUser, private val notesDao: NotesDao) :
+class LoginViewModel(private val chainUserModule: ChainUserModule) :
     CoroutineViewModel() {
 
-    fun getUser(): User? {
-        return sharPrefUser.getSavedUser()
-    }
+    val loggedIn: LiveData<Boolean> = chainUserModule.checkUserLoggedIn().asLiveData()
 
-    fun saveUser(user: User): Job {
-        val a = launch {
-            val idUser = notesDao.getUserId(user.firstName, user.lastName)
-            if (idUser != 0L) {
-                sharPrefUser.setSavedUser(user) { idUser }
-            } else {
-                sharPrefUser.setSavedUser(user) { notesDao.saveUser(it) }
+    val errorLiveData = MutableLiveData<String>()
+
+    fun login(firstName: String, lastName: String) {
+        launch {
+            try {
+                if (firstName.isNotBlank() && lastName.isNotBlank()) {
+                    chainUserModule.login(firstName, lastName)
+                } else {
+                    errorLiveData.postValue("Enter user name")
+                }
+            } catch (e: Exception) {
+                errorLiveData.postValue(e.message)
             }
         }
-        return a
     }
 
-    fun clearSavedUser() {
-        sharPrefUser.clearSavedUser()
+    fun clear() {
+        launch {
+            chainUserModule.logout()
+        }
     }
 }

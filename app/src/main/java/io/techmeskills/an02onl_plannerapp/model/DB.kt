@@ -5,9 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
-import io.techmeskills.an02onl_plannerapp.Note
-import io.techmeskills.an02onl_plannerapp.User
-import io.techmeskills.an02onl_plannerapp.UserWithNotes
+import io.techmeskills.an02onl_plannerapp.model.dao.UsersDao
 
 @Database(
     entities = [
@@ -20,6 +18,7 @@ import io.techmeskills.an02onl_plannerapp.UserWithNotes
 
 abstract class DB : RoomDatabase() {
     abstract fun notesDao(): NotesDao
+    abstract fun usersDao(): UsersDao
 }
 
 object DatabaseConstructor {

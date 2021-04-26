@@ -11,8 +11,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentAddBinding
-import io.techmeskills.an02onl_plannerapp.Note
-import io.techmeskills.an02onl_plannerapp.User
+import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,14 +34,13 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
                             id = it.id,
                             title = viewBinding.noteText.text.toString(),
                             date = dateFormatter.format(viewBinding.noteDate.getSelectedDate()),
-                            viewModel.getUser()!!.userId)
+                            user = it.user)
                     )
                 } ?: kotlin.run {
                     viewModel.addNewNote(
                         Note(
                             title = viewBinding.noteText.text.toString(),
                             date = dateFormatter.format(viewBinding.noteDate.getSelectedDate()),
-                            user = viewModel.getUser()!!.userId
                         )
                     )
                 }

@@ -6,6 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
@@ -49,18 +50,44 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             adapter.submitList(it)
         }
 
-        val toolbar = viewBinding.toolbar
-        toolbar.title = viewModel.getSavedUser()?.firstName
-        toolbar.subtitle = viewModel.getSavedUser()?.lastName
-        toolbar.setNavigationOnClickListener {
-            viewModel.clearSavedUser()
-            findNavController().popBackStack()
+        viewModel.currentUser.observe(this.viewLifecycleOwner) {
+            if (it.userId == -1L) {
+                findNavController().popBackStack()
+            } else {
+                viewBinding.toolbar.title = it.firstName
+                viewBinding.toolbar.subtitle = it.lastName
+            }
+
+        }
+
+        viewBinding.syncImage.setOnClickListener {
+            showCloudDialog()
+        }
+
+        viewBinding.toolbar.setNavigationOnClickListener {
+            viewModel.logout()
+
         }
 
         val itemTouchHelper = ItemTouchHelper(adapter.simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
 
+    }
+
+    private fun showCloudDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Cloud storage")
+            .setMessage("Chose")
+            .setPositiveButton("Import") { dialog, _ ->
+//                viewBinding.progressIndicator.isVisible = true
+                viewModel.importNotes()
+                dialog.cancel()
+            }.setNegativeButton("Export") { dialog, _ ->
+//                viewBinding.progressIndicator.isVisible = true
+                viewModel.exportNotes()
+                dialog.cancel()
+            }.show()
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {

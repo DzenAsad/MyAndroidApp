@@ -3,7 +3,11 @@ package io.techmeskills.an02onl_plannerapp
 import android.app.Application
 import io.techmeskills.an02onl_plannerapp.model.DB
 import io.techmeskills.an02onl_plannerapp.model.DatabaseConstructor
-import io.techmeskills.an02onl_plannerapp.model.sharedPrefs.SharPrefUser
+import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainCloudModule
+import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
+import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
+import io.techmeskills.an02onl_plannerapp.model.cloud.ApiInterface
+import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
 import io.techmeskills.an02onl_plannerapp.screen.add.AddViewModel
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginViewModel
 import io.techmeskills.an02onl_plannerapp.screen.main.MainViewModel
@@ -18,25 +22,31 @@ class PlannerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlannerApp)
-            modules(listOf(viewModels, storageModule, preferencesModule))
+            modules(listOf(viewModels, storageModule, settingsStore, cloudModule))
         }
     }
 
     private val viewModels = module {
-        viewModel { LoginViewModel(get(), get()) }
-        viewModel { MainViewModel(get(), get()) }
-        viewModel { AddViewModel(get(), get()) }
+        viewModel { LoginViewModel(get()) }
+        viewModel { MainViewModel(get(), get(), get()) }
+        viewModel { AddViewModel(get()) }
     }
 
 
     private val storageModule = module {
         single { DatabaseConstructor.create(get()) }
         factory { get<DB>().notesDao() }
+        factory { get<DB>().usersDao() }
+        single { SettingsStore(get()) }
     }
 
-    private val preferencesModule = module {
-        single { SharPrefUser(get()) }
+    private val settingsStore = module {  //создаем репозитории
+        factory { ChainUserModule(get(), get(), get()) }
+        factory { ChainNoteModule(get(), get()) }
+        factory { ChainCloudModule(get(), get(), get()) }
     }
 
-
+    private val cloudModule = module {
+        factory { ApiInterface.get() }
+    }
 }

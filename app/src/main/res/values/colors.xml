@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="redFox">#C35817</color>
+    <color name="paper">#FFD5B59C</color>
 </resources>
