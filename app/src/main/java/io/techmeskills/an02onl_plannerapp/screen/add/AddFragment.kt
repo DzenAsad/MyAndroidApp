@@ -8,11 +8,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentAddBinding
 import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.DateFormat
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,7 +36,8 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
                             id = it.id,
                             title = viewBinding.noteText.text.toString(),
                             date = dateFormatter.format(viewBinding.noteDate.getSelectedDate()),
-                            user = it.user)
+                            user = it.user
+                        )
                     )
                 } ?: kotlin.run {
                     viewModel.addNewNote(
@@ -71,7 +74,7 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
 
     private fun DatePicker.setSelectedDate(date: String?) {
         date?.let {
-            dateFormatter.parse(it)?.let { date ->
+            dateFormatter.parseWithoutException(it)?.let { date ->
                 val calendar = Calendar.getInstance(Locale.getDefault())
                 calendar.time = date
                 val year = calendar.get(Calendar.YEAR)
@@ -79,6 +82,15 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
                 this.updateDate(year, month, day)
             }
+        }
+
+    }
+
+    private fun DateFormat.parseWithoutException(string: String): Date? {
+        return try {
+            parse(string)
+        } catch (e: ParseException) {
+            return null
         }
     }
 

@@ -1,5 +1,6 @@
 package io.techmeskills.an02onl_plannerapp.model.chainModules
 
+import androidx.recyclerview.widget.DiffUtil
 import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
 import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
@@ -43,6 +44,7 @@ class ChainNoteModule(private val notesDao: NotesDao, private val settingsStore:
     suspend fun saveNotes(notes: List<Note>) {
         withContext(Dispatchers.IO) {
             notesDao.saveNotes(notes)
+
         }
     }
 

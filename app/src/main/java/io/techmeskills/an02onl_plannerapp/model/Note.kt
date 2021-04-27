@@ -12,4 +12,18 @@ open class Note(
         val date: String,
         val user: Long = -1L,
         val fromCloud: Boolean = false
-) : Parcelable
+) : Parcelable {
+        override fun equals(other: Any?): Boolean {
+                if (other is Note) {return title == other.title && date == other.date && user == other.user}
+                return super.equals(other)
+        }
+
+        override fun hashCode(): Int {
+                var result = id.hashCode()
+                result = 31 * result + title.hashCode()
+                result = 31 * result + date.hashCode()
+                result = 31 * result + user.hashCode()
+                result = 31 * result + fromCloud.hashCode()
+                return result
+        }
+}
