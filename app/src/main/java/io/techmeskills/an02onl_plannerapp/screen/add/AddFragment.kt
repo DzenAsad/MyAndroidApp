@@ -66,8 +66,7 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
         }
 
         viewBinding.noteDate.setOnClickListener {
-            val date = dateFormatter.parseWithoutException(viewBinding.noteDate.text.toString())?.time
-            showDatePickerDialog(date)
+            showDatePickerDialog(dateFormatter.parseWithoutException(viewBinding.noteDate.text.toString())?.time)
         }
 
         viewBinding.toolbar.setNavigationOnClickListener {
@@ -92,8 +91,8 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
         builder.setCalendarConstraints(constraintsBuilder.build())
 
         val picker: MaterialDatePicker<*> = builder.build()
-
         picker.show(childFragmentManager, picker.toString())
+
         picker.addOnPositiveButtonClickListener {
             val pickedDate = Date(picker.selection as Long)
             viewBinding.noteDate.setText(dateFormatter.format(pickedDate))
