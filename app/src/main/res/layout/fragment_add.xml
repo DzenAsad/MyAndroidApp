@@ -13,42 +13,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="ADD NOTE"
-        app:titleTextColor="@color/white" />
+        app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24">
 
-    <DatePicker
-        android:id="@+id/noteDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:theme="@style/DialogTheme"
-        app:layout_constraintVertical_bias="0.1"
+        <ImageView
+            android:id="@+id/buttonAdd"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="end"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_baseline_add_24"
+            />
+
+        <EditText
+            android:id="@+id/noteDate"
+            android:layout_width="105dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:focusableInTouchMode="true"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="Date"
+            android:textStyle="bold"
+            android:theme="@style/DialogTheme"
+            android:background="@drawable/rounded_edittext_white" />
+    </androidx.appcompat.widget.Toolbar>
+
+
+    <EditText
+        android:id="@+id/noteText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constrainedHeight="true"
+        android:background="@drawable/rounded_edittext"
+        android:ems="10"
+        android:gravity="clip_horizontal"
+        android:hint="@string/write_some_text"
+        android:inputType="textMultiLine"
+        android:padding="10dp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-
-    <EditText
-        android:id="@+id/noteText"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="@string/write_some_text"
-        android:inputType="text"
-        android:background="@drawable/rounded_edittext"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteDate" />
-
-    <Button
-        android:id="@+id/buttonAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:text="OK"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noteDate" />
 </androidx.constraintlayout.widget.ConstraintLayout>

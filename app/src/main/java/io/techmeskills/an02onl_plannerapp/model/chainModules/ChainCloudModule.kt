@@ -42,7 +42,9 @@ class ChainCloudModule(
                 fromCloud = true
             )
         }
-        chainNoteModule.saveNotes(notes)
+        val currNotes = chainNoteModule.getCurrentUserNotes()
+        chainNoteModule.saveNotes(notes.toMutableList().also {it.removeAll(currNotes)})
         return response.isSuccessful
     }
+
 }

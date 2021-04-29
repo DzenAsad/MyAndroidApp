@@ -2,6 +2,8 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -69,6 +71,14 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         }
 
+        viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->
+            if (success.not()) {
+                Toast.makeText(requireContext(), "Sync Failed", Toast.LENGTH_LONG)
+                    .show()
+            }
+            viewBinding.syncImage.animation?.cancel()
+        }
+
         val itemTouchHelper = ItemTouchHelper(adapter.simpleItemTouchCallback)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
@@ -76,15 +86,16 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     }
 
     private fun showCloudDialog() {
+        val animation: () -> (Unit) = { viewBinding.syncImage.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.sync_anim))}
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Cloud storage")
             .setMessage("Chose")
             .setPositiveButton("Import") { dialog, _ ->
-//                viewBinding.progressIndicator.isVisible = true
+                animation()
                 viewModel.importNotes()
                 dialog.cancel()
             }.setNegativeButton("Export") { dialog, _ ->
-//                viewBinding.progressIndicator.isVisible = true
+                animation()
                 viewModel.exportNotes()
                 dialog.cancel()
             }.show()
