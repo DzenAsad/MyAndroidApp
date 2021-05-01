@@ -22,7 +22,7 @@ class MainViewModel(
 ) : CoroutineViewModel() {
 
     val notesLiveData = chainNoteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
-        listOf(AddNote) + it
+        listOf(AddNote) + it.sortedBy { it.pos }
     }.asLiveData()
 
     val progressLiveData = MutableLiveData<Boolean>()
@@ -39,6 +39,12 @@ class MainViewModel(
     fun logout(): Job {
         return launch {
             chainUserModule.logout()
+        }
+    }
+
+    fun updatePos(notes: List<Note>){
+        launch {
+            chainNoteModule.updatePos(notes)
         }
     }
 

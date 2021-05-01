@@ -3,24 +3,28 @@ package io.techmeskills.an02onl_plannerapp.model.chainModules
 import androidx.recyclerview.widget.DiffUtil
 import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
+import io.techmeskills.an02onl_plannerapp.model.dao.UsersDao
 import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class ChainNoteModule(private val notesDao: NotesDao, private val settingsStore: SettingsStore) {
+class ChainNoteModule(private val notesDao: NotesDao,
+                      private val usersDao: UsersDao,
+                      private val settingsStore: SettingsStore) {
 
     @ExperimentalCoroutinesApi
     val currentUserNotesFlow: Flow<List<Note>> =
         settingsStore.storedUserFlow()
             .flatMapLatest { user -> //получаем из сеттингов текущий айди юзера
-                notesDao.getAllUserNotes(user.name) //получаем заметки по айди юзера
+                usersDao.getUserWithNotesFlow(user.name).map { it?.notes ?: emptyList() } //получаем заметки по айди юзера
             }
 
     suspend fun getCurrentUserNotes(): List<Note> {
-        return notesDao.getAllUserNotesList(settingsStore.getUser().name)
+        return usersDao.getUserWithNotes(settingsStore.getUser().name)?.notes ?: emptyList()
     }
 
     suspend fun setAllNotesSyncWithCloud() {
@@ -57,6 +61,13 @@ class ChainNoteModule(private val notesDao: NotesDao, private val settingsStore:
     suspend fun deleteNote(note: Note) {
         withContext(Dispatchers.IO) {
             notesDao.deleteNote(note)
+        }
+    }
+
+    suspend fun updatePos(notes: List<Note>){
+        withContext(Dispatchers.IO){
+            notes.forEachIndexed { index, note -> note.pos = index }
+            notesDao.updateNotes(notes)
         }
     }
 }

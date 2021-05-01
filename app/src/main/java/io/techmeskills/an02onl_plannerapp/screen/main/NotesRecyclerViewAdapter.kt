@@ -54,40 +54,7 @@ class NotesRecyclerViewAdapter(
         onClick(getItem(position))
     }
 
-    val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
-        ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
 
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-            if (viewHolder.itemViewType == 1) return 0 //Protect add button from delete
-            return super.getMovementFlags(recyclerView, viewHolder)
-        }
-
-
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            val fromPos = viewHolder.adapterPosition
-            val toPos = target.adapterPosition
-            recyclerView.adapter!!.notifyItemMoved(fromPos, toPos)
-            return true
-        }
-
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-            val position = viewHolder.adapterPosition
-            onDelete(getItem(position))
-        }
-
-    }
 
 
     inner class NoteViewHolder(

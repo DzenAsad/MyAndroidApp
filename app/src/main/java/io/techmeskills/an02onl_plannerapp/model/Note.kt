@@ -12,6 +12,7 @@ open class Note(
         val date: String,
         @ColumnInfo(index = true, name = "user")
         val user: String,
+        var pos: Int = 0,
         val fromCloud: Boolean = false
 ) : Parcelable {
         override fun equals(other: Any?): Boolean {

@@ -42,7 +42,7 @@ class PlannerApp : Application() {
 
     private val settingsStore = module {  //создаем репозитории
         factory { ChainUserModule(get(), get(), get()) }
-        factory { ChainNoteModule(get(), get()) }
+        factory { ChainNoteModule(get(), get(), get()) }
         factory { ChainCloudModule(get(), get(), get()) }
     }
 

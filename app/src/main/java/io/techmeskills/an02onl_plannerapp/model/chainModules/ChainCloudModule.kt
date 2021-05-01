@@ -47,7 +47,7 @@ class ChainCloudModule(
             )
         }
         val currNotes = chainNoteModule.getCurrentUserNotes()
-        notes.toMutableList().also { if (it.removeAll(currNotes)) chainNoteModule.saveNotes(it) }
+        chainNoteModule.saveNotes(notes.toMutableList().apply { removeAll(currNotes) })
         return response.isSuccessful
     }
 

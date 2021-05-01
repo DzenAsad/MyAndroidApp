@@ -24,5 +24,9 @@ abstract class UsersDao {
 
     @Transaction
     @Query("SELECT * FROM users WHERE name == :name LIMIT 1")
-    abstract fun getAllUserWithNotes(name: String): Flow<UserWithNotes?>
+    abstract fun getUserWithNotesFlow(name: String): Flow<UserWithNotes?>
+
+    @Transaction
+    @Query("SELECT * FROM users WHERE name == :name LIMIT 1")
+    abstract fun getUserWithNotes(name: String): UserWithNotes?
 }
