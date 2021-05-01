@@ -12,11 +12,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
-import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import io.techmeskills.an02onl_plannerapp.support.navigateSafe
-import okhttp3.internal.notify
-import okhttp3.internal.notifyAll
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -33,9 +30,6 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                     note
                 )
             )
-        },
-        onDelete = {
-            viewModel.deleteNote(it)
         },
         onAdd = {
             findNavController().navigateSafe(
@@ -54,7 +48,6 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         viewBinding.recyclerView.adapter = adapter
 
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-
             it.let {
                 val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
                     ItemTouchHelper.SimpleCallback(
@@ -62,7 +55,10 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                         ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
                     ) {
 
-                    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                    override fun getMovementFlags(
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder,
+                    ): Int {
                         if (viewHolder.itemViewType == NotesRecyclerViewAdapter.ADD) return 0 //Protect add button from delete
                         return super.getMovementFlags(recyclerView, viewHolder)
                     }
@@ -70,7 +66,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                     override fun onMove(
                         recyclerView: RecyclerView,
                         viewHolder: RecyclerView.ViewHolder,
-                        target: RecyclerView.ViewHolder
+                        target: RecyclerView.ViewHolder,
                     ): Boolean {
                         val fromPos = viewHolder.adapterPosition
                         val toPos = target.adapterPosition
@@ -125,12 +121,15 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
     override fun onPause() {
         super.onPause()
-        viewModel.notesLiveData.value?.let {viewModel.updatePos(it.drop(0))}
+        viewModel.notesLiveData.value?.let { viewModel.updatePos(it.drop(1)) }
     }
 
 
     private fun showCloudDialog() {
-        val animation: () -> (Unit) = { viewBinding.syncImage.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.sync_anim))}
+        val animation: () -> (Unit) = {
+            viewBinding.syncImage.startAnimation(AnimationUtils.loadAnimation(requireContext(),
+                R.anim.sync_anim))
+        }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Cloud storage")
             .setMessage("Chose")

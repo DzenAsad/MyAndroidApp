@@ -9,16 +9,14 @@ import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val chainUserModule: ChainUserModule,
     private val chainNoteModule: ChainNoteModule,
-    private val chainCloudModule: ChainCloudModule
+    private val chainCloudModule: ChainCloudModule,
 ) : CoroutineViewModel() {
 
     val notesLiveData = chainNoteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
@@ -42,7 +40,7 @@ class MainViewModel(
         }
     }
 
-    fun updatePos(notes: List<Note>){
+    fun updatePos(notes: List<Note>) {
         launch {
             chainNoteModule.updatePos(notes)
         }
@@ -61,7 +59,7 @@ class MainViewModel(
 }
 
 
-object AddNote : Note(-1, "", " ", user = "")
+object AddNote : Note(-1, "", " ", user = "", pos = -1)
 
 
 

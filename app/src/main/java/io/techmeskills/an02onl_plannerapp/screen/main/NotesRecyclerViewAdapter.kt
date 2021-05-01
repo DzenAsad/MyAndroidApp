@@ -7,23 +7,21 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.R
+import io.techmeskills.an02onl_plannerapp.model.Note
 
 
 class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
-    private val onDelete: (Note) -> Unit,
     private val onAdd: () -> Unit,
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteAdapterDiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
-    ): RecyclerView.ViewHolder = when (viewType){
+        viewType: Int,
+    ): RecyclerView.ViewHolder = when (viewType) {
         ADD -> AddViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.note_list_item_add, parent, false),
             onAdd
@@ -55,8 +53,6 @@ class NotesRecyclerViewAdapter(
     }
 
 
-
-
     inner class NoteViewHolder(
         itemView: View,
         private val onItemClick: (Int) -> Unit,
@@ -81,7 +77,7 @@ class NotesRecyclerViewAdapter(
 
     inner class AddViewHolder(
         itemView: View,
-        private val onItemClick: () -> Unit
+        private val onItemClick: () -> Unit,
     ) : RecyclerView.ViewHolder(itemView) {
 
         init {
