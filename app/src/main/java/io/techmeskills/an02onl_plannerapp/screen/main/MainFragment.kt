@@ -137,8 +137,9 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     override fun onDialogResultAvailable(event: BaseDialogEvent): Boolean {
         return when (event) {
             is DialogInputEvent -> {
-                event.negClicked().also { if (it)
-                    viewModel.delCurrUser()
+                event.negClicked().also {
+                    if (it)
+                        viewModel.delCurrUser()
                 }
             }
             else -> false
@@ -156,8 +157,12 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
     private fun showCloudDialog() {
         val animation: () -> (Unit) = {
-            viewBinding.syncImage.startAnimation(AnimationUtils.loadAnimation(requireContext(),
-                R.anim.sync_anim))
+            viewBinding.syncImage.startAnimation(
+                AnimationUtils.loadAnimation(
+                    requireContext(),
+                    R.anim.sync_anim
+                )
+            )
         }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Cloud storage")
