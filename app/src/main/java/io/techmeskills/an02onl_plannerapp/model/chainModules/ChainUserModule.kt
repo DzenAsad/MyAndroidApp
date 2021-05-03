@@ -22,21 +22,21 @@ class ChainUserModule(
 
     val allUserNames = usersDao.getAllUsers()
 
-    suspend fun login(firsName: String, lastName: String) {
+    suspend fun login(name: String) {
         withContext(Dispatchers.IO) {
-            val userId: Long = if (checkUserExists(firsName, lastName).not()) {
-                usersDao.saveUser(User(name = firsName))
+            val userId: Long = if (checkUserExists(name).not()) {
+                usersDao.saveUser(User(name = name))
             } else {
-                usersDao.getUserId(firsName)
+                usersDao.getUserId(name)
 
             }
-            settingsStore.setUser(User(userId, firsName))
+            settingsStore.setUser(User(userId, name))
         }
     }
 
-    private suspend fun checkUserExists(firsName: String, lastName: String): Boolean {
+    private suspend fun checkUserExists(name: String): Boolean {
         return withContext(Dispatchers.IO) {
-            usersDao.getUserId(firsName) > 0
+            usersDao.getUserId(name) > 0
         }
     }
 
@@ -53,11 +53,14 @@ class ChainUserModule(
         return settingsStore.storedUserFlow()
     }
 
-    suspend fun updtCurrUser(newName: String) {
-        val curUser = settingsStore.getUser()
-        val newUser = User(curUser.id, newName, curUser.passwd)
-        usersDao.updateUser(newUser)
-        settingsStore.setUser(newUser)
+    suspend fun updtCurrUser(newName: String): Boolean {
+        return if (checkUserExists(newName).not()) {
+            val curUser = settingsStore.getUser()
+            val newUser = User(curUser.id, newName, curUser.passwd)
+            usersDao.updateUser(newUser)
+            settingsStore.setUser(newUser)
+            true
+        } else false
     }
 
     suspend fun delCurrUser() {

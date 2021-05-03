@@ -7,11 +7,9 @@ import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainCloudModule
 import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
 import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val chainUserModule: ChainUserModule,
@@ -24,6 +22,8 @@ class MainViewModel(
     }.asLiveData()
 
     val progressLiveData = MutableLiveData<Boolean>()
+
+    val progressEditUser = MutableLiveData<Boolean>()
 
     val currentUser = chainUserModule.getCurrentUser().flowOn(Dispatchers.IO).asLiveData()
 
@@ -53,10 +53,10 @@ class MainViewModel(
         }
     }
 
-    fun updtCurrUser(newName: String) {
-        launch {
-            chainUserModule.updtCurrUser(newName)
-        }
+    fun updtCurrUserAsync(newName: String) = launch {
+        val result = chainUserModule.updtCurrUser(newName)
+        progressEditUser.postValue(result)
+
     }
 
     fun exportNotes() = launch {

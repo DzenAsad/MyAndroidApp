@@ -22,7 +22,7 @@ class LoginViewModel(private val chainUserModule: ChainUserModule) :
         launch {
             try {
                 if (firstName.isNotBlank() && lastName.isNotBlank()) {
-                    chainUserModule.login(firstName, lastName)
+                    chainUserModule.login(firstName)
                 } else {
                     errorLiveData.postValue("Enter user name")
                 }

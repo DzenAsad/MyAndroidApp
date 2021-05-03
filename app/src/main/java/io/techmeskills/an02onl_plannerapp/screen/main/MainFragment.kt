@@ -127,6 +127,13 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             viewBinding.syncImage.animation?.cancel()
         }
 
+        viewModel.progressEditUser.observe(this.viewLifecycleOwner) { success ->
+            if (success.not()) {
+                Toast.makeText(requireContext(), "User with tis name already exist!", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+
     }
 
     override fun onPause() {
@@ -138,11 +145,10 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         return when (event) {
             is DialogInputEvent -> {
                 event.negClicked().also {
-                    if (it)
-                        viewModel.delCurrUser()
+                    if (it) viewModel.delCurrUser()
                 }
                 event.posClicked().also {
-                    if (it) viewModel.updtCurrUser(event.data!!.input)
+                    if (it) viewModel.updtCurrUserAsync(event.data!!.input)
                 }
             }
             else -> false
