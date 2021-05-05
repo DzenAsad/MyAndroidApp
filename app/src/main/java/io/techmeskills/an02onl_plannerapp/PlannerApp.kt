@@ -3,10 +3,11 @@ package io.techmeskills.an02onl_plannerapp
 import android.app.Application
 import io.techmeskills.an02onl_plannerapp.model.DB
 import io.techmeskills.an02onl_plannerapp.model.DatabaseConstructor
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainCloudModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
 import io.techmeskills.an02onl_plannerapp.model.cloud.ApiInterface
+import io.techmeskills.an02onl_plannerapp.model.modules.AlarmModule
+import io.techmeskills.an02onl_plannerapp.model.modules.CloudModule
+import io.techmeskills.an02onl_plannerapp.model.modules.NoteModule
+import io.techmeskills.an02onl_plannerapp.model.modules.UserModule
 import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
 import io.techmeskills.an02onl_plannerapp.screen.add.AddViewModel
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginViewModel
@@ -22,7 +23,7 @@ class PlannerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlannerApp)
-            modules(listOf(viewModels, storageModule, settingsStore, cloudModule))
+            modules(listOf(viewModels, storageModule, settingsStore, cloudModule, alarmModule))
         }
     }
 
@@ -41,12 +42,16 @@ class PlannerApp : Application() {
     }
 
     private val settingsStore = module {  //создаем репозитории
-        factory { ChainUserModule(get(), get(), get()) }
-        factory { ChainNoteModule(get(), get(), get()) }
-        factory { ChainCloudModule(get(), get(), get()) }
+        factory { UserModule(get(), get(), get()) }
+        factory { NoteModule(get(), get(), get()) }
+        factory { CloudModule(get(), get(), get()) }
     }
 
     private val cloudModule = module {
         factory { ApiInterface.get() }
+    }
+
+    private val alarmModule = module {
+        single { AlarmModule(get(), get()) }
     }
 }

@@ -1,4 +1,4 @@
-package io.techmeskills.an02onl_plannerapp.model.chainModules
+package io.techmeskills.an02onl_plannerapp.model.modules
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class ChainUserModule(
+class UserModule(
     context: Context,
     private val usersDao: UsersDao,
     private val settingsStore: SettingsStore,

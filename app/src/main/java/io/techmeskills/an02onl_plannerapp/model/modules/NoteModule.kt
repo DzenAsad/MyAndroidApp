@@ -1,4 +1,4 @@
-package io.techmeskills.an02onl_plannerapp.model.chainModules
+package io.techmeskills.an02onl_plannerapp.model.modules
 
 import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.model.dao.NotesDao
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class ChainNoteModule(
+class NoteModule(
     private val notesDao: NotesDao,
     private val usersDao: UsersDao,
     private val settingsStore: SettingsStore,
