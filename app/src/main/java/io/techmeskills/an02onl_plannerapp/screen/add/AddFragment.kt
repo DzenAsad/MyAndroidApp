@@ -1,6 +1,8 @@
 package io.techmeskills.an02onl_plannerapp.screen.add
 
+import android.app.DatePickerDialog
 import android.app.SharedElementCallback
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.View
 import android.widget.DatePicker
@@ -12,6 +14,12 @@ import androidx.navigation.fragment.navArgs
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.michaelflisar.dialogs.classes.DialogStyle
+import com.michaelflisar.dialogs.events.BaseDialogEvent
+import com.michaelflisar.dialogs.events.DialogDateTimeEvent
+import com.michaelflisar.dialogs.events.DialogInputEvent
+import com.michaelflisar.dialogs.setups.DialogDateTime
+import com.michaelflisar.dialogs.setups.DialogInput
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentAddBinding
 import io.techmeskills.an02onl_plannerapp.model.Note
@@ -29,7 +37,7 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
     override val viewBinding: FragmentAddBinding by viewBinding()
     private val viewModel: AddViewModel by viewModel()
 
-    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:MM", Locale.getDefault())
+    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     private val args: AddFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,21 +93,38 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
     }
 
     private fun showDatePickerDialog(date: Long?) {
-        val builder: MaterialDatePicker.Builder<Long> =
-        MaterialDatePicker.Builder.datePicker().setSelection(date)
+//        val builder: MaterialDatePicker.Builder<Long> =
+//        MaterialDatePicker.Builder.datePicker().setSelection(date)
+//
+//        val constraintsBuilder = CalendarConstraints.Builder()
+//        builder.setCalendarConstraints(constraintsBuilder.build())
+//
+//        val picker: MaterialDatePicker<*> = builder.build()
+//        picker.show(childFragmentManager, picker.toString())
+//
+//        picker.addOnPositiveButtonClickListener {
+//            val pickedDate = Date(picker.selection as Long)
+//            viewBinding.noteDate.setText(dateFormatter.format(pickedDate))
+//        }
 
-        val constraintsBuilder = CalendarConstraints.Builder()
-        builder.setCalendarConstraints(constraintsBuilder.build())
+        DialogDateTime(2)
 
-        val picker: MaterialDatePicker<*> = builder.build()
-        picker.show(childFragmentManager, picker.toString())
-
-        picker.addOnPositiveButtonClickListener {
-            val pickedDate = Date(picker.selection as Long)
-            viewBinding.noteDate.setText(dateFormatter.format(pickedDate))
-        }
+            .create()
+            .show(this)
     }
 
+    override fun onDialogResultAvailable(event: BaseDialogEvent): Boolean {
+        return when (event) {
+            is DialogDateTimeEvent -> {
+                event.posClicked().also {
+                    if (it) viewBinding.noteDate.setText(
+                        (dateFormatter.format(event.data!!.date.timeInMillis))
+                    )
+                }
+            }
+            else -> false
+        }
+    }
 
     override val backPressedCallback: OnBackPressedCallback
         get() = object : OnBackPressedCallback(true) {

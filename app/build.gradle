@@ -95,4 +95,5 @@ dependencies {
 
     implementation "com.github.MFlisar.MaterialDialogFragments:dialogs:0.82"
     implementation "com.github.MFlisar.MaterialDialogFragments:dialogs-input:0.82"
+    implementation "com.github.MFlisar.MaterialDialogFragments:dialogs-datetime:0.82"
 }

@@ -16,6 +16,7 @@ class MyIntentService : JobIntentService() {
         }
     }
 
+
     companion object {
         const val ACTION_SEND_TEST_MESSAGE = "ACTION_SEND_TEST_MESSAGE"
         const val EXTRA_MESSAGE = "EXTRA_MESSAGE"
