@@ -54,7 +54,7 @@ class PlannerApp : Application() {
     }
 
     private val alarmModule = module {
-        single { MyAlarmManager }
+        single { MyAlarmManager() }
     }
 
 }
