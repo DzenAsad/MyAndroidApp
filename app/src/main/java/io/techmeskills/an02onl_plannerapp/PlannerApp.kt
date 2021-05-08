@@ -3,7 +3,7 @@ package io.techmeskills.an02onl_plannerapp
 import android.app.Application
 import io.techmeskills.an02onl_plannerapp.model.DB
 import io.techmeskills.an02onl_plannerapp.model.DatabaseConstructor
-import io.techmeskills.an02onl_plannerapp.model.alarm.MyAlarmManager
+import io.techmeskills.an02onl_plannerapp.model.alarm.NoteAlarmManager
 import io.techmeskills.an02onl_plannerapp.model.cloud.ApiInterface
 import io.techmeskills.an02onl_plannerapp.model.modules.AlarmModule
 import io.techmeskills.an02onl_plannerapp.model.modules.CloudModule
@@ -54,7 +54,7 @@ class PlannerApp : Application() {
     }
 
     private val alarmModule = module {
-        single { MyAlarmManager() }
+        single { NoteAlarmManager() }
     }
 
 }

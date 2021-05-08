@@ -20,11 +20,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".ConnectionReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+        <receiver
+            android:name=".model.alarm.NoteAlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 
