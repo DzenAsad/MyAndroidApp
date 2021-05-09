@@ -46,7 +46,7 @@ class PlannerApp : Application() {
         factory { UserModule(get(), get(), get()) }
         factory { NoteModule(get(), get(), get()) }
         factory { CloudModule(get(), get(), get()) }
-        factory { AlarmModule(get(), get()) }
+        factory { AlarmModule(get()) }
     }
 
     private val cloudModule = module {
@@ -54,7 +54,7 @@ class PlannerApp : Application() {
     }
 
     private val alarmModule = module {
-        single { NoteAlarmManager() }
+        single { NoteAlarmManager(get()) }
     }
 
 }

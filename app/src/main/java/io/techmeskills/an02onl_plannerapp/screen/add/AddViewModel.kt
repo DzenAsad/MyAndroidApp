@@ -11,10 +11,6 @@ class AddViewModel(
     private val alarmModule: AlarmModule
 ) : CoroutineViewModel() {
 
-    init {
-        alarmModule.cancelAlarm()
-    }
-
     fun addNewNote(note: Note) {
         launch {
             noteModule.saveNote(note)

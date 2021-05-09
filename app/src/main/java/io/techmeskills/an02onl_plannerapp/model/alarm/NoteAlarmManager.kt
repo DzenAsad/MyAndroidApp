@@ -1,39 +1,27 @@
 package io.techmeskills.an02onl_plannerapp.model.alarm
 
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import androidx.core.content.ContextCompat.getSystemService
+import io.techmeskills.an02onl_plannerapp.model.Note
 
 
-class NoteAlarmManager {
+class NoteAlarmManager(private val context: Context) {
+    //Alarm manager
+    private val alarmManager = getSystemService(context, AlarmManager::class.java) as AlarmManager
 
-
-    fun setAlarm(context: Context, alarmTime: Long, message: String) {
-
-        //Intent
-        val intent = Intent(context, NoteAlarmReceiver::class.java)
-        intent.putExtra("ALARM_MSG", message); //put our info in intent
-
-        //PendingIntent
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-
-        //Alarm manager
-        val alarmManager = getSystemService(context, AlarmManager::class.java) as AlarmManager
-        alarmManager.setExact(AlarmManager.RTC, alarmTime, pendingIntent)
+    fun setAlarm(alarmTime: Long, note: Note) {
+        //Set Alarm
+        alarmManager.setExact(AlarmManager.RTC, alarmTime, NoteIntent.buildIntent(context, note))
 //        Toast.makeText(context, "Alarm is set", Toast.LENGTH_SHORT).show()
 
 
     }
 
 
-    fun cancelAlarm(context: Context) {
-
+    fun cancelAlarm(note: Note) {
+        alarmManager.cancel(NoteIntent.buildIntent(context, note))
     }
-
-
-
 
 
 }

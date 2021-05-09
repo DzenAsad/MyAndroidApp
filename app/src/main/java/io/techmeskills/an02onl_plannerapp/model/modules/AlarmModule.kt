@@ -8,16 +8,15 @@ import java.util.*
 
 class AlarmModule(
     private val noteAlarmManager: NoteAlarmManager,
-    private val context: Context,
 ) {
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     fun setAlarm(note: Note) {
-        noteAlarmManager.setAlarm(context, dateFormatter.parse(note.date)!!.time, note.title)
+        noteAlarmManager.setAlarm(dateFormatter.parse(note.date)!!.time, note)
     }
 
-    fun cancelAlarm() {
-        noteAlarmManager.cancelAlarm(context)
+    fun cancelAlarm(note: Note) {
+        noteAlarmManager.cancelAlarm(note)
     }
 
 }
