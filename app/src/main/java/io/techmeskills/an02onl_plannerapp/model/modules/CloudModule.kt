@@ -20,7 +20,7 @@ class CloudModule(
         val notes = noteModule.getCurrentUserNotes()
         val cloudUser =
             CloudUser(userName = user.name)
-        val cloudNotes = notes.map { CloudNote(id = it.id, title = it.title, date = it.date) }
+        val cloudNotes = notes.map { CloudNote(id = it.id, title = it.title, date = it.date, alarmEnabled = it.alarmEnabled) }
         val exportRequestBody =
             ExportNotesRequestBody(cloudUser, userModule.phoneId, cloudNotes)
         val exportResult = apiInterface.exportNotes(exportRequestBody).isSuccessful
@@ -43,6 +43,7 @@ class CloudModule(
                 title = cloudNote.title,
                 date = cloudNote.date,
                 user = user.name,
+                alarmEnabled = cloudNote.alarmEnabled,
                 fromCloud = true
             )
         }

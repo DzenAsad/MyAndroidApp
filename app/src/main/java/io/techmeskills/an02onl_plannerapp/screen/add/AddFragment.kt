@@ -50,7 +50,8 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
                             id = it.id,
                             title = viewBinding.noteText.text.toString(),
                             date = viewBinding.noteDate.text.toString(),
-                            user = it.user
+                            user = it.user,
+                            alarmEnabled = viewBinding.switchAlarm.isChecked
                         )
                     )
                 } ?: kotlin.run {
@@ -58,7 +59,8 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
                         Note(
                             title = viewBinding.noteText.text.toString(),
                             date = viewBinding.noteDate.text.toString(),
-                            user = ""
+                            user = "",
+                            alarmEnabled = viewBinding.switchAlarm.isChecked
                         )
                     )
                 }
@@ -72,6 +74,7 @@ class AddFragment : NavigationFragment<FragmentAddBinding>(R.layout.fragment_add
         args.note?.let { note ->
             viewBinding.noteText.setText(note.title)
             viewBinding.noteDate.setText(note.date)
+            viewBinding.switchAlarm.isChecked = note.alarmEnabled
         }
 
         viewBinding.noteDate.setOnClickListener {

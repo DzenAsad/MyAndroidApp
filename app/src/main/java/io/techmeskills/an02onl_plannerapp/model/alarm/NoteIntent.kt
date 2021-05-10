@@ -7,15 +7,18 @@ import androidx.core.app.NotificationCompat
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.model.Note
 
-object NoteIntent {
+class NoteIntent {
 
     fun buildIntent(context: Context, note: Note): PendingIntent{
         //Intent
         val intent = Intent(context, NoteAlarmReceiver::class.java)
-        intent.putExtra("ALARM_MSG", note.title) //put our info in intent
+        //put our info in intent
+//        intent.extras?.putParcelable("ALARM_NOTE", note)
+//        intent.putExtra("ALARM_NOTE", note)
+        intent.putExtra("ALARM_MSG", note.title)
         intent.putExtra("ALARM_ID", note.id)
         //PendingIntent
-        return PendingIntent.getBroadcast(context, 0, intent, 0)
+        return PendingIntent.getBroadcast(context, 1221, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     fun makeDeleteAction(context: Context, noteId: Long): NotificationCompat.Action {
@@ -26,7 +29,7 @@ object NoteIntent {
 
         val deletePendingIntent = PendingIntent.getService(
             context.applicationContext,
-            1,
+            1221,
             deleteIntent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )

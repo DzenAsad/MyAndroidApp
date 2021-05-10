@@ -15,7 +15,7 @@ class NoteModule(
     private val notesDao: NotesDao,
     private val usersDao: UsersDao,
     private val settingsStore: SettingsStore,
-    private val alarmModule: AlarmModule
+    private val alarmModule: AlarmModule,
 ) {
 
     @ExperimentalCoroutinesApi
@@ -41,35 +41,50 @@ class NoteModule(
             val tmp = Note(
                 title = note.title,
                 date = note.date,
+                alarmEnabled = note.alarmEnabled,
                 user = settingsStore.getUser().name
             )
-            alarmModule.setAlarm(
-                Note(
-                    id = notesDao.saveNote(tmp),
-                    title = tmp.title,
-                    date = tmp.date,
-                    user = tmp.user
+            val tmpId = notesDao.saveNote(tmp)
+            if (note.alarmEnabled) {
+                alarmModule.setAlarm(
+                    Note(
+                        id = tmpId,
+                        title = tmp.title,
+                        date = tmp.date,
+                        user = tmp.user
+                    )
                 )
-            )
+            }
         }
     }
 
     suspend fun saveNotes(notes: List<Note>) {
         withContext(Dispatchers.IO) {
             notesDao.saveNotes(notes)
-
+            notes.forEach {
+                if (it.alarmEnabled){
+                    alarmModule.setAlarm(it)
+                }
+            }
         }
     }
 
     suspend fun updateNote(note: Note) {
         withContext(Dispatchers.IO) {
+            notesDao.getNoteById(note.id)?.let {
+                alarmModule.cancelAlarm(it)
+            }
             notesDao.updateNote(note)
+            if (note.alarmEnabled){
+                alarmModule.setAlarm(note)
+            }
         }
     }
 
     suspend fun deleteNote(note: Note) {
         withContext(Dispatchers.IO) {
             notesDao.deleteNote(note)
+            alarmModule.cancelAlarm(note)
         }
     }
 
@@ -82,8 +97,10 @@ class NoteModule(
 
     suspend fun deleteNoteById(noteId: Long) {
         withContext(Dispatchers.IO) {
+
             notesDao.getNoteById(noteId)?.let {
-                notesDao.deleteNote(it)
+                deleteNote(it)
+                alarmModule.cancelAlarm(it)
             }
         }
     }

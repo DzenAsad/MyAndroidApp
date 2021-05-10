@@ -9,10 +9,10 @@ import io.techmeskills.an02onl_plannerapp.model.Note
 class NoteAlarmManager(private val context: Context) {
     //Alarm manager
     private val alarmManager = getSystemService(context, AlarmManager::class.java) as AlarmManager
-
+    private val noteIntent: NoteIntent = NoteIntent()
     fun setAlarm(alarmTime: Long, note: Note) {
         //Set Alarm
-        alarmManager.setExact(AlarmManager.RTC, alarmTime, NoteIntent.buildIntent(context, note))
+        alarmManager.setExact(AlarmManager.RTC, alarmTime, noteIntent.buildIntent(context, note))
 //        Toast.makeText(context, "Alarm is set", Toast.LENGTH_SHORT).show()
 
 
@@ -20,7 +20,7 @@ class NoteAlarmManager(private val context: Context) {
 
 
     fun cancelAlarm(note: Note) {
-        alarmManager.cancel(NoteIntent.buildIntent(context, note))
+        alarmManager.cancel(noteIntent.buildIntent(context, note))
     }
 
 

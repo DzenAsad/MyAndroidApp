@@ -2,6 +2,7 @@ package io.techmeskills.an02onl_plannerapp.model.alarm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -18,6 +19,10 @@ class NoteAlarmReceiver : BroadcastReceiver() {
     }
 
     private fun pushNote(context: Context, intent: Intent) {
+        val noteIntent: NoteIntent = NoteIntent()
+
+        val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
         //Notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val mChannel = NotificationChannel(
@@ -25,15 +30,15 @@ class NoteAlarmReceiver : BroadcastReceiver() {
                 MY_APP_CHANNEL_NAME,
                 NotificationManager.IMPORTANCE_DEFAULT
             )
-            val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nm.createNotificationChannel(mChannel)
         }
         //get Note from intent
+//        val tmpNote: Note? = intent.extras?.getParcelable("ALARM_NOTE")
         val noteTitle = intent.getStringExtra("ALARM_MSG")
         val noteId = intent.getLongExtra("ALARM_ID", -1)
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .addAction(NoteIntent.makeDeleteAction(context, noteId))
+            .addAction(noteIntent.makeDeleteAction(context, noteId))
             .setSmallIcon(R.drawable.ic_baseline_note_24)
             .setContentTitle("Напоминание")
             .setContentText(noteTitle)
@@ -42,10 +47,11 @@ class NoteAlarmReceiver : BroadcastReceiver() {
 
 
         //Push notification
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, builder.build())
-            // посылаем уведомление
-        }
+        nm.notify(0, builder.build())
+//        with(NotificationManagerCompat.from(context)) {
+//            notify(NOTIFICATION_ID, builder.build())
+//            // посылаем уведомление
+//        }
 
 
 

@@ -22,6 +22,7 @@ open class Note(
     val user: String,
     var pos: Int = 0,
     val fromCloud: Boolean = false,
+    val alarmEnabled: Boolean = false
 ) : Parcelable {
     override fun equals(other: Any?): Boolean {
         if (other is Note) {
