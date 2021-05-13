@@ -22,7 +22,7 @@
         </activity>
 
         <receiver
-            android:name=".model.alarm.NoteAlarmReceiver"
+            android:name=".model.receiver.NoteAlarmReceiver"
             android:enabled="true"
             android:exported="true" />
 

@@ -1,3 +1,5 @@
+package io.techmeskills.an02onl_plannerapp.model.receiver
+
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -7,7 +9,7 @@ import android.net.NetworkInfo
 import androidx.lifecycle.LiveData
 
 
-class ConnectionLiveData(private val context: Context) : LiveData<Boolean>() {
+class ConnectionLiveDataReceiver(private val context: Context) : LiveData<Boolean>() {
 
     override fun onActive() {
         super.onActive()

@@ -1,7 +1,6 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
-import ConnectionLiveData
-import android.graphics.ColorFilter
+import io.techmeskills.an02onl_plannerapp.model.receiver.ConnectionLiveDataReceiver
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -69,7 +68,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         }
 
-        ConnectionLiveData(requireContext()).observe(this.viewLifecycleOwner) {
+        viewModel.connectionLiveData.observe(this.viewLifecycleOwner) {
             viewBinding.syncImage.isClickable = it
             if (it.not()) {
                 viewBinding.syncImage.setColorFilter(R.color.grayInactive)

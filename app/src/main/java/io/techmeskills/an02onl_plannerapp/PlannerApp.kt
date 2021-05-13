@@ -11,6 +11,7 @@ import io.techmeskills.an02onl_plannerapp.model.modules.CloudModule
 import io.techmeskills.an02onl_plannerapp.model.modules.NoteModule
 import io.techmeskills.an02onl_plannerapp.model.modules.UserModule
 import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
+import io.techmeskills.an02onl_plannerapp.model.receiver.ConnectionLiveDataReceiver
 import io.techmeskills.an02onl_plannerapp.screen.add.AddViewModel
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginViewModel
 import io.techmeskills.an02onl_plannerapp.screen.main.MainViewModel
@@ -25,13 +26,13 @@ class PlannerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlannerApp)
-            modules(listOf(viewModels, storageModule, settingsStore, cloudModule, alarmModule))
+            modules(listOf(viewModels, storageModule, settingsStore, cloudModule, alarmModule, receiver))
         }
     }
 
     private val viewModels = module {
         viewModel { LoginViewModel(get()) }
-        viewModel { MainViewModel(get(), get(), get()) }
+        viewModel { MainViewModel(get(), get(), get(), get()) }
         viewModel { AddViewModel(get()) }
     }
 
@@ -58,4 +59,7 @@ class PlannerApp : Application() {
         single { NoteAlarmManager(get()) }
     }
 
+    private val receiver = module {
+        single { ConnectionLiveDataReceiver(get()) }
+    }
 }

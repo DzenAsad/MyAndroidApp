@@ -1,16 +1,14 @@
-package io.techmeskills.an02onl_plannerapp.model.alarm
+package io.techmeskills.an02onl_plannerapp.model.receiver
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import io.techmeskills.an02onl_plannerapp.R
-import io.techmeskills.an02onl_plannerapp.model.Note
+import io.techmeskills.an02onl_plannerapp.model.alarm.NoteIntent
 
 class NoteAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

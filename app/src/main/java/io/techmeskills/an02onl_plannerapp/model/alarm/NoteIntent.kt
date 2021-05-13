@@ -6,6 +6,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.model.Note
+import io.techmeskills.an02onl_plannerapp.model.receiver.NoteAlarmReceiver
 
 class NoteIntent {
 
