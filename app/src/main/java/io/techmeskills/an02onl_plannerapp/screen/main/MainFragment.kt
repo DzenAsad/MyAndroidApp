@@ -70,11 +70,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
         viewModel.connectionLiveData.observe(this.viewLifecycleOwner) {
             viewBinding.syncImage.isClickable = it
-            if (it.not()) {
-                viewBinding.syncImage.setColorFilter(R.color.grayInactive)
-            } else {
-                viewBinding.syncImage.clearColorFilter()
-            }
+            viewBinding.syncImage.isActivated = !it.not()
         }
 
         viewBinding.titleText.setOnClickListener {

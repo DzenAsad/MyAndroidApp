@@ -26,12 +26,14 @@
         </TextView>
 
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/syncImage"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:layout_gravity="end"
             android:scaleType="center"
+            android:tint = "@drawable/touch_selector"
+            android:background="@color/redFox"
             android:src="@drawable/ic_baseline_sync_24"
             />
 
