@@ -1,5 +1,6 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
+import io.techmeskills.an02onl_plannerapp.model.receiver.ConnectionLiveDataReceiver
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -9,6 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.michaelflisar.dialogs.events.BaseDialogEvent
+import com.michaelflisar.dialogs.events.DialogInputEvent
+import com.michaelflisar.dialogs.setups.DialogInput
+import com.michaelflisar.text.asText
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
@@ -28,9 +33,6 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                     note
                 )
             )
-        },
-        onDelete = {
-            viewModel.deleteNote(it)
         },
         onAdd = {
             findNavController().navigateSafe(
@@ -52,18 +54,35 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             adapter.submitList(it)
         }
 
+        val simpleItemTouchCallback = MyItemTouchCallback(swipeDelete = {
+            viewModel.deleteNote(adapter.currentList[it])
+        })
+        ItemTouchHelper(simpleItemTouchCallback).attachToRecyclerView(viewBinding.recyclerView)
+
         viewModel.currentUser.observe(this.viewLifecycleOwner) {
-            if (it.userId == -1L) {
+            if (it.name.isEmpty()) {
                 findNavController().popBackStack()
             } else {
-                viewBinding.toolbar.title = it.firstName
-                viewBinding.toolbar.subtitle = it.lastName
+                viewBinding.titleText.text = it.name
             }
 
         }
 
+        viewModel.connectionLiveData.observe(this.viewLifecycleOwner) {
+            viewBinding.syncImage.isClickable = it
+            viewBinding.syncImage.isActivated = !it.not()
+        }
+
+        viewBinding.titleText.setOnClickListener {
+            showUserEditDialog()
+
+        }
+
+
+
         viewBinding.syncImage.setOnClickListener {
             showCloudDialog()
+
         }
 
         viewBinding.toolbar.setNavigationOnClickListener {
@@ -79,14 +98,56 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             viewBinding.syncImage.animation?.cancel()
         }
 
-        val itemTouchHelper = ItemTouchHelper(adapter.simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
+        viewModel.progressEditUser.observe(this.viewLifecycleOwner) { success ->
+            if (success.not()) {
+                Toast.makeText(
+                    requireContext(),
+                    "User with tis name already exist!",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
+        }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.notesLiveData.value?.let { viewModel.updatePos(it.drop(1)) }
+    }
+
+    override fun onDialogResultAvailable(event: BaseDialogEvent): Boolean {
+        return when (event) {
+            is DialogInputEvent -> {
+                event.negClicked().also {
+                    if (it) viewModel.delCurrUser()
+                }
+                event.posClicked().also {
+                    if (it) viewModel.updtCurrUserAsync(event.data!!.input)
+                }
+            }
+            else -> false
+        }
+    }
+
+    private fun showUserEditDialog() {
+        val di =
+            DialogInput.InputField(initialText = viewBinding.titleText.text.toString().asText())
+        DialogInput(input = di, id = 1, title = "Edit User".asText(), negButton = "Delete".asText())
+            .create()
+            .show(this)
 
     }
 
     private fun showCloudDialog() {
-        val animation: () -> (Unit) = { viewBinding.syncImage.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.sync_anim))}
+        val animation: () -> (Unit) = {
+            viewBinding.syncImage.startAnimation(
+                AnimationUtils.loadAnimation(
+                    requireContext(),
+                    R.anim.sync_anim
+                )
+            )
+        }
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Cloud storage")
             .setMessage("Chose")

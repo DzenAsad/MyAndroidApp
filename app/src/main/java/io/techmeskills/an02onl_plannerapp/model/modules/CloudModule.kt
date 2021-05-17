@@ -1,4 +1,4 @@
-package io.techmeskills.an02onl_plannerapp.model.chainModules
+package io.techmeskills.an02onl_plannerapp.model.modules
 
 import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.model.cloud.ApiInterface
@@ -8,42 +8,47 @@ import io.techmeskills.an02onl_plannerapp.model.cloud.ExportNotesRequestBody
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 
-class ChainCloudModule(
+class CloudModule(
     private val apiInterface: ApiInterface,
-    private val chainNoteModule: ChainNoteModule,
-    private val chainUserModule: ChainUserModule
+    private val noteModule: NoteModule,
+    private val userModule: UserModule
 ) {
 
     @ExperimentalCoroutinesApi
     suspend fun exportNotes(): Boolean {
-        val user = chainUserModule.getCurrentUserFlow().first()
-        val notes = chainNoteModule.getCurrentUserNotes()
-        val cloudUser = CloudUser(userId = user.userId, userName = user.firstName + " " + user.lastName)
-        val cloudNotes = notes.map { CloudNote(id = it.id, title = it.title, date = it.date) }
+        val user = userModule.getCurrentUserFlow().first()
+        val notes = noteModule.getCurrentUserNotes()
+        val cloudUser =
+            CloudUser(userName = user.name)
+        val cloudNotes = notes.map { CloudNote(id = it.id, title = it.title, date = it.date, alarmEnabled = it.alarmEnabled) }
         val exportRequestBody =
-            ExportNotesRequestBody(cloudUser, chainUserModule.phoneId, cloudNotes)
+            ExportNotesRequestBody(cloudUser, userModule.phoneId, cloudNotes)
         val exportResult = apiInterface.exportNotes(exportRequestBody).isSuccessful
         if (exportResult) {
-            chainNoteModule.setAllNotesSyncWithCloud()
+            noteModule.setAllNotesSyncWithCloud()
         }
         return exportResult
     }
 
     @ExperimentalCoroutinesApi
     suspend fun importNotes(): Boolean {
-        val user = chainUserModule.getCurrentUserFlow().first()
-        val response = apiInterface.importNotes(userName = user.firstName + " " + user.lastName, chainUserModule.phoneId)
+        val user = userModule.getCurrentUserFlow().first()
+        val response = apiInterface.importNotes(
+            userName = user.name,
+            userModule.phoneId
+        )
         val cloudNotes = response.body() ?: emptyList()
         val notes = cloudNotes.map { cloudNote ->
             Note(
                 title = cloudNote.title,
                 date = cloudNote.date,
-                user = user.userId,
+                user = user.name,
+                alarmEnabled = cloudNote.alarmEnabled,
                 fromCloud = true
             )
         }
-        val currNotes = chainNoteModule.getCurrentUserNotes()
-        chainNoteModule.saveNotes(notes.toMutableList().also {it.removeAll(currNotes)})
+        val currNotes = noteModule.getCurrentUserNotes()
+        noteModule.saveNotes(notes.toMutableList().apply { removeAll(currNotes) })
         return response.isSuccessful
     }
 

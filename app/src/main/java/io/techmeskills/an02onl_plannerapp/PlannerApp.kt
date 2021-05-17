@@ -3,11 +3,15 @@ package io.techmeskills.an02onl_plannerapp
 import android.app.Application
 import io.techmeskills.an02onl_plannerapp.model.DB
 import io.techmeskills.an02onl_plannerapp.model.DatabaseConstructor
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainCloudModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
+import io.techmeskills.an02onl_plannerapp.model.alarm.NoteAlarmManager
+import io.techmeskills.an02onl_plannerapp.model.alarm.NoteAlarmService
 import io.techmeskills.an02onl_plannerapp.model.cloud.ApiInterface
+import io.techmeskills.an02onl_plannerapp.model.modules.AlarmModule
+import io.techmeskills.an02onl_plannerapp.model.modules.CloudModule
+import io.techmeskills.an02onl_plannerapp.model.modules.NoteModule
+import io.techmeskills.an02onl_plannerapp.model.modules.UserModule
 import io.techmeskills.an02onl_plannerapp.model.preferences.SettingsStore
+import io.techmeskills.an02onl_plannerapp.model.receiver.ConnectionLiveDataReceiver
 import io.techmeskills.an02onl_plannerapp.screen.add.AddViewModel
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginViewModel
 import io.techmeskills.an02onl_plannerapp.screen.main.MainViewModel
@@ -22,13 +26,13 @@ class PlannerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlannerApp)
-            modules(listOf(viewModels, storageModule, settingsStore, cloudModule))
+            modules(listOf(viewModels, storageModule, settingsStore, cloudModule, alarmModule, receiver))
         }
     }
 
     private val viewModels = module {
         viewModel { LoginViewModel(get()) }
-        viewModel { MainViewModel(get(), get(), get()) }
+        viewModel { MainViewModel(get(), get(), get(), get()) }
         viewModel { AddViewModel(get()) }
     }
 
@@ -41,12 +45,21 @@ class PlannerApp : Application() {
     }
 
     private val settingsStore = module {  //создаем репозитории
-        factory { ChainUserModule(get(), get(), get()) }
-        factory { ChainNoteModule(get(), get()) }
-        factory { ChainCloudModule(get(), get(), get()) }
+        factory { UserModule(get(), get(), get()) }
+        factory { NoteModule(get(), get(), get(), get()) }
+        factory { CloudModule(get(), get(), get()) }
+        factory { AlarmModule(get()) }
     }
 
     private val cloudModule = module {
         factory { ApiInterface.get() }
+    }
+
+    private val alarmModule = module {
+        single { NoteAlarmManager(get()) }
+    }
+
+    private val receiver = module {
+        single { ConnectionLiveDataReceiver(get()) }
     }
 }

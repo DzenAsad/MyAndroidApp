@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="redFox">#C35817</color>
     <color name="paper">#FFD5B59C</color>
+    <color name="red">#FF0000</color>
+    <color name="redDarker">#6A0000</color>
+    <color name="grayInactive">#2F2F2F</color>
 </resources>

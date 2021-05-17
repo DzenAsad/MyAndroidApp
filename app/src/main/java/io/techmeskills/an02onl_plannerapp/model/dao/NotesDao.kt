@@ -27,16 +27,16 @@ abstract class NotesDao {
     abstract fun deleteNotes(notes: List<Note>)
 
     @Transaction
-    @Query("SELECT * FROM notes, users")
-    abstract fun getAllUserWithNotes(): Flow<List<UserWithNotes>>
+    @Query("SELECT * FROM notes WHERE user == :name")
+    abstract fun getAllUserNotes(name: String): Flow<List<Note>>
 
     @Transaction
-    @Query("SELECT * FROM notes WHERE user == :id")
-    abstract fun getAllUserNotes(id: Long): Flow<List<Note>>
+    @Query("SELECT * FROM notes WHERE user == :name")
+    abstract fun getAllUserNotesList(name: String): List<Note>
 
     @Transaction
-    @Query("SELECT * FROM notes WHERE user == :id")
-    abstract fun getAllUserNotesList(id: Long): List<Note>
+    @Query("SELECT * FROM notes WHERE id == :id")
+    abstract fun getNoteById(id: Long): Note?
 
     @Query("UPDATE notes SET fromCloud = 1")
     abstract fun setAllNotesSyncWithCloud()

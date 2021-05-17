@@ -3,18 +3,15 @@ package io.techmeskills.an02onl_plannerapp.screen.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import io.techmeskills.an02onl_plannerapp.model.User
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
+import io.techmeskills.an02onl_plannerapp.model.modules.UserModule
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(private val chainUserModule: ChainUserModule) :
+class LoginViewModel(private val userModule: UserModule) :
     CoroutineViewModel() {
 
-    val loggedIn: LiveData<Boolean> = chainUserModule.checkUserLoggedIn().asLiveData()
+    val loggedIn: LiveData<Boolean> = userModule.checkUserLoggedIn().asLiveData()
 
     val errorLiveData = MutableLiveData<String>()
 
@@ -22,7 +19,7 @@ class LoginViewModel(private val chainUserModule: ChainUserModule) :
         launch {
             try {
                 if (firstName.isNotBlank() && lastName.isNotBlank()) {
-                    chainUserModule.login(firstName, lastName)
+                    userModule.login(firstName)
                 } else {
                     errorLiveData.postValue("Enter user name")
                 }
@@ -34,7 +31,7 @@ class LoginViewModel(private val chainUserModule: ChainUserModule) :
 
     fun clear() {
         launch {
-            chainUserModule.logout()
+            userModule.logout()
         }
     }
 }

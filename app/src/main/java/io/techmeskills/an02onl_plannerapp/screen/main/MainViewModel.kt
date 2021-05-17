@@ -3,59 +3,84 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import io.techmeskills.an02onl_plannerapp.model.Note
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainCloudModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainNoteModule
-import io.techmeskills.an02onl_plannerapp.model.chainModules.ChainUserModule
+import io.techmeskills.an02onl_plannerapp.model.modules.CloudModule
+import io.techmeskills.an02onl_plannerapp.model.modules.NoteModule
+import io.techmeskills.an02onl_plannerapp.model.modules.UserModule
+import io.techmeskills.an02onl_plannerapp.model.receiver.ConnectionLiveDataReceiver
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 
+
 class MainViewModel(
-    private val chainUserModule: ChainUserModule,
-    private val chainNoteModule: ChainNoteModule,
-    private val chainCloudModule: ChainCloudModule
+    private val userModule: UserModule,
+    private val noteModule: NoteModule,
+    private val cloudModule: CloudModule,
+    private val connectionLiveDataReceiver: ConnectionLiveDataReceiver,
 ) : CoroutineViewModel() {
 
-    val notesLiveData = chainNoteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
+
+    val notesLiveData = noteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
         listOf(AddNote) + it
     }.asLiveData()
 
     val progressLiveData = MutableLiveData<Boolean>()
 
-    val currentUser = chainUserModule.getCurrentUser().flowOn(Dispatchers.IO).asLiveData()
+    val progressEditUser = MutableLiveData<Boolean>()
+
+    val connectionLiveData = connectionLiveDataReceiver
+
+    val currentUser = userModule.getCurrentUser().flowOn(Dispatchers.IO).asLiveData()
 
 
     fun deleteNote(note: Note) {
         launch {
-            chainNoteModule.deleteNote(note)
+            noteModule.deleteNote(note)
         }
     }
 
     fun logout(): Job {
         return launch {
-            chainUserModule.logout()
+            userModule.logout()
         }
     }
 
+    fun updatePos(notes: List<Note>) {
+        launch {
+            noteModule.updatePos(notes)
+        }
+    }
+
+    fun delCurrUser() {
+        launch {
+            userModule.delCurrUser()
+            userModule.logout()
+        }
+    }
+
+    fun updtCurrUserAsync(newName: String) = launch {
+        val result = userModule.updtCurrUser(newName)
+        progressEditUser.postValue(result)
+
+    }
+
     fun exportNotes() = launch {
-        val result = chainCloudModule.exportNotes()
+        val result = cloudModule.exportNotes()
         progressLiveData.postValue(result)
     }
 
     fun importNotes() = launch {
-        val result = chainCloudModule.importNotes()
+        val result = cloudModule.importNotes()
         progressLiveData.postValue(result)
     }
 
 }
 
 
-object AddNote : Note(-1, "", " ", user = -1)
+object AddNote : Note(0, "", " ", user = "", pos = 0)
 
 
 

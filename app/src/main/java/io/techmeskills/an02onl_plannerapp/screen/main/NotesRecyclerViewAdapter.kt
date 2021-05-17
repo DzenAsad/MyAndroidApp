@@ -5,25 +5,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.R
+import io.techmeskills.an02onl_plannerapp.model.Note
 
 
 class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
-    private val onDelete: (Note) -> Unit,
     private val onAdd: () -> Unit,
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteAdapterDiffCallback()) {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
-    ): RecyclerView.ViewHolder = when (viewType){
+        viewType: Int,
+    ): RecyclerView.ViewHolder = when (viewType) {
         ADD -> AddViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.note_list_item_add, parent, false),
             onAdd
@@ -54,41 +53,6 @@ class NotesRecyclerViewAdapter(
         onClick(getItem(position))
     }
 
-    val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
-        ItemTouchHelper.SimpleCallback(
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
-            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        ) {
-
-        override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-            if (viewHolder.itemViewType == 1) return 0 //Protect add button from delete
-            return super.getMovementFlags(recyclerView, viewHolder)
-        }
-
-
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            val fromPos = viewHolder.adapterPosition
-            val toPos = target.adapterPosition
-            recyclerView.adapter!!.notifyItemMoved(fromPos, toPos)
-            return true
-        }
-
-        override fun isLongPressDragEnabled(): Boolean {
-            return true
-        }
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-            val position = viewHolder.adapterPosition
-            onDelete(getItem(position))
-        }
-
-    }
-
 
     inner class NoteViewHolder(
         itemView: View,
@@ -98,6 +62,7 @@ class NotesRecyclerViewAdapter(
         private val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
         private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
         private val ivCloud = itemView.findViewById<ImageView>(R.id.syncImage)
+        private val ivAlarm = itemView.findViewById<ImageView>(R.id.alarmImage)
 
         init {
             itemView.setOnClickListener {
@@ -109,12 +74,13 @@ class NotesRecyclerViewAdapter(
             tvTitle.text = item.title
             tvDate.text = item.date
             ivCloud.isVisible = item.fromCloud
+            ivAlarm.isVisible = item.alarmEnabled
         }
     }
 
     inner class AddViewHolder(
         itemView: View,
-        private val onItemClick: () -> Unit
+        private val onItemClick: () -> Unit,
     ) : RecyclerView.ViewHolder(itemView) {
 
         init {
@@ -139,6 +105,6 @@ class NoteAdapterDiffCallback : DiffUtil.ItemCallback<Note>() {
     }
 
     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-        return oldItem.date == newItem.date && oldItem.title == newItem.title && oldItem.fromCloud == newItem.fromCloud
+        return oldItem.date == newItem.date && oldItem.title == newItem.title && oldItem.fromCloud == newItem.fromCloud && oldItem.alarmEnabled == newItem.alarmEnabled
     }
 }

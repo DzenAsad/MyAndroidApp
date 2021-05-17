@@ -13,7 +13,7 @@ class UserWithNotes(
     @Embedded
     val user: User,
     @Relation(
-        parentColumn = "user_id",
+        parentColumn = "name",
         entityColumn = "user"
     , entity = Note::class)
     val notes: List<Note>

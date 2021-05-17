@@ -9,14 +9,14 @@ import kotlinx.parcelize.Parcelize
 
 
 @Parcelize
-@Entity(tableName = "users", indices = [Index(value = ["first_name", "last_name"], unique = true)])
+@Entity(tableName = "users", indices = [Index(value = ["name"], unique = true)])
 class User(
-    @ColumnInfo(name = "user_id")
-    @PrimaryKey(autoGenerate = true) val userId: Long = 0L,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0L,
 
-    @ColumnInfo(name = "first_name")
-    val firstName: String,
+    @ColumnInfo(name = "name")
+    val name: String,
 
-    @ColumnInfo(name = "last_name")
-    val lastName: String
+    @ColumnInfo(name = "passwd")
+    val passwd: String = ""
 ) : Parcelable

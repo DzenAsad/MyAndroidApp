@@ -4,9 +4,11 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
+import com.michaelflisar.dialogs.events.BaseDialogEvent
+import com.michaelflisar.dialogs.interfaces.DialogFragmentCallback
 
 abstract class NavigationFragment<T : ViewBinding>(@LayoutRes layoutResId: Int) :
-    SupportFragmentInset<T>(layoutResId) {
+    SupportFragmentInset<T>(layoutResId), DialogFragmentCallback {
 
     open val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -22,5 +24,9 @@ abstract class NavigationFragment<T : ViewBinding>(@LayoutRes layoutResId: Int) 
     override fun onDestroy() {
         super.onDestroy()
         backPressedCallback.remove()
+    }
+
+    override fun onDialogResultAvailable(event: BaseDialogEvent): Boolean {
+        return false
     }
 }
