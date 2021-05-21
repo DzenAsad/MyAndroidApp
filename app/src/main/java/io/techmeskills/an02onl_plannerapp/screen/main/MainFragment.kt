@@ -5,11 +5,9 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.core.app.ActivityCompat.invalidateOptionsMenu
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import by.kirich1409.viewbindingdelegate.viewBinding
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.michaelflisar.dialogs.events.BaseDialogEvent
 import com.michaelflisar.dialogs.events.DialogInputEvent
@@ -110,7 +108,6 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             }
         }
 
-        viewBinding.toolbarLayout
 
     }
 
