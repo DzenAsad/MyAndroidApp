@@ -7,11 +7,11 @@
     android:background="@color/white">
 
     <androidx.recyclerview.widget.RecyclerView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:spanCount="2"
         tools:listitem="@layout/note_list_item" />
 
@@ -27,12 +27,14 @@
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:statusBarScrim="@color/redFox">
+            app:statusBarScrim="@color/redFox"
+            app:title="Name">
+
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/backdrop"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="350dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/toolbar_fox"
@@ -42,37 +44,26 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="bottom"
-                android:background="@color/redFox"
-                app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24">
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24"
+                app:popupTheme="@style/ThemeOverlay.AppCompat">
 
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/titleText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="?attr/actionBarSize"
-                    android:gravity="center"
-                    android:text="Name"
-                    android:textColor="@color/white"
-                    android:textSize="30sp" />
-
-
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/syncImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="10dp"
-                    android:background="@color/redFox"
-                    android:src="@drawable/ic_baseline_sync_24"
-                    android:tint="@drawable/touch_selector" />
 
             </androidx.appcompat.widget.Toolbar>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/syncImage"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@color/empty"
+                android:src="@drawable/ic_baseline_sync_24"
+                android:tint="@drawable/touch_selector" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

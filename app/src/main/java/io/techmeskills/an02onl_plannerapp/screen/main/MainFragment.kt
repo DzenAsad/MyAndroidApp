@@ -62,7 +62,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             if (it.name.isEmpty()) {
                 findNavController().popBackStack()
             } else {
-                viewBinding.titleText.text = it.name
+                viewBinding.toolbarLayout.title = it.name
             }
 
         }
@@ -72,10 +72,10 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             viewBinding.syncImage.isActivated = !it.not()
         }
 
-        viewBinding.titleText.setOnClickListener {
-            showUserEditDialog()
-
-        }
+//        viewBinding.titleText.setOnClickListener {
+//            showUserEditDialog()
+//
+//        }
 
 
 
@@ -132,7 +132,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
     private fun showUserEditDialog() {
         val di =
-            DialogInput.InputField(initialText = viewBinding.titleText.text.toString().asText())
+            DialogInput.InputField(initialText = viewBinding.toolbarLayout.title.toString().asText())
         DialogInput(input = di, id = 1, title = "Edit User".asText(), negButton = "Delete".asText())
             .create()
             .show(this)
