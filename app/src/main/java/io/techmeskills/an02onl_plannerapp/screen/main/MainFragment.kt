@@ -72,10 +72,10 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             viewBinding.syncImage.isActivated = !it.not()
         }
 
-//        viewBinding.titleText.setOnClickListener {
-//            showUserEditDialog()
-//
-//        }
+        viewBinding.toolbarLayout.setOnLongClickListener {
+            showUserEditDialog()
+            true
+        }
 
 
 

@@ -28,6 +28,7 @@
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/redFox"
+            app:titleEnabled="true"
             app:title="Name">
 
 
