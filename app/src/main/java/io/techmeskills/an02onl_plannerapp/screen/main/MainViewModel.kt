@@ -1,10 +1,7 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.widget.ListAdapter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
+import androidx.lifecycle.*
 import io.techmeskills.an02onl_plannerapp.model.Note
 import io.techmeskills.an02onl_plannerapp.model.modules.CloudModule
 import io.techmeskills.an02onl_plannerapp.model.modules.NoteModule
@@ -13,10 +10,7 @@ import io.techmeskills.an02onl_plannerapp.model.receiver.ConnectionLiveDataRecei
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.internal.notify
 import java.text.SimpleDateFormat
@@ -34,14 +28,13 @@ class MainViewModel(
         listOf(AddNote) + it
     }.asLiveData()
 
-    val sortedLiveData = MutableLiveData(notesLiveData.value ?: listOf(AddNote))
+    val sortedLiveData = MutableLiveData<List<Note>>()
 
     val progressLiveData = MutableLiveData<Boolean>()
 
     val progressEditUser = MutableLiveData<Boolean>()
 
     val currentUser = userModule.getCurrentUser().flowOn(Dispatchers.IO).asLiveData()
-
 
     fun deleteNote(note: Note) {
         launch {
@@ -88,7 +81,7 @@ class MainViewModel(
         val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         sortedLiveData.postValue(noteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
             listOf(AddNote) + it.filter { it.date.isNotBlank() && ((dateFormatter.parse(it.date) == date))  }
-        }.asLiveData().value)
+        }.first())
     }
 
 

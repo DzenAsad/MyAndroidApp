@@ -54,6 +54,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         viewBinding.recyclerView.adapter = adapter
 
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
+            viewModel.sortedLiveData.postValue(it)
             val tmp = it.flatMap { listOf(it.date) }
             viewBinding.rvSomeFox.setDate(tmp) {
                 viewModel.sortByDate(it)
