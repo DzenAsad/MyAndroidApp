@@ -1,5 +1,7 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
+import android.widget.ListAdapter
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
 import io.techmeskills.an02onl_plannerapp.model.Note
@@ -14,6 +16,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainViewModel(
@@ -25,6 +30,10 @@ class MainViewModel(
 
 
     val notesLiveData = noteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
+        listOf(AddNote) + it
+    }.asLiveData()
+
+    var sortedLiveData = noteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
         listOf(AddNote) + it
     }.asLiveData()
 
@@ -74,6 +83,13 @@ class MainViewModel(
     fun importNotes() = launch {
         val result = cloudModule.importNotes()
         progressLiveData.postValue(result)
+    }
+
+    fun sortByDate(date: Date) = launch {
+        val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        sortedLiveData = noteModule.currentUserNotesFlow.flowOn(Dispatchers.IO).map {
+            listOf(AddNote) + it.filter { it.date.isNotBlank() && ((dateFormatter.parse(it.date) == date))  }
+        }.asLiveData()
     }
 
 }

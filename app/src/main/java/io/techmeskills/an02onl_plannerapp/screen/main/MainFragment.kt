@@ -17,9 +17,9 @@ import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import io.techmeskills.an02onl_plannerapp.support.navigateSafe
+import okhttp3.internal.notify
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.text.SimpleDateFormat
-import java.util.*
+
 
 
 class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_main) {
@@ -53,8 +53,14 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         viewBinding.recyclerView.adapter = adapter
 
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
+            val tmp = it.flatMap { listOf(it.date) }
+            viewBinding.rvSomeFox.setDate(tmp) {
+                viewModel.sortByDate(it)
+            }
+        }
+
+        viewModel.sortedLiveData.observe(this.viewLifecycleOwner){
             adapter.submitList(it)
-//            viewBinding.rvFoxPicker.setDate(it.flatMap { listOf(it.date) })
         }
 
         val simpleItemTouchCallback = MyItemTouchCallback(swipeDelete = {
@@ -113,11 +119,6 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         }
 
 
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewModel.notesLiveData.value?.let { viewModel.updatePos(it.drop(1)) }
     }
 
     override fun onDialogResultAvailable(event: BaseDialogEvent): Boolean {

@@ -42,9 +42,12 @@
                 app:layout_collapseMode="parallax" />
 
             <com.example.datepickerfox.FoxPicker
-                android:id="@+id/rvFoxPicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:id="@+id/rvSomeFox"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="200dp"
+                android:layout_marginBottom="10dp"/>
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
